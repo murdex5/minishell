@@ -12,26 +12,28 @@
 
 #include "../../minishell.h"
 
-int	execute_ast_pipeline(t_ast_node *node, char **envp)
+int	execute_ast_pipeline(t_ast_node *node, char **envp, t_token *token,
+		char *line)
 {
 	if (!node)
 		return (0);
 	return (exec_ast(node, envp));
 }
 
-int	exec_ast(t_ast_node *node, char **envp)
+int	exec_ast(t_ast_node *node, char **envp, t_token *token, char *line)
 {
 	if (node->type == NODE_COMMAND)
 	{
 		return (exec_simple_command((t_command_node *)node, envp));
 	}
 	if (node->type == NODE_PIPE)
-		return (exec_pipe_node((t_pipe_node *)node, envp));
+		return (exec_pipe_node((t_pipe_node *)node, envp, token, line));
 	printf_err("minishell: Unrecognized node type", node->type);
 	return (127);
 }
 
-int	exec_simple_command(t_command_node *cmd, char **envp)
+int	exec_simple_command(t_command_node *cmd, char **envp, t_token *token,
+		char *line)
 {
 	pid_t	pid;
 	int		status;
@@ -40,6 +42,8 @@ int	exec_simple_command(t_command_node *cmd, char **envp)
 	pid = fork();
 	if (pid == -1)
 		return (perror_ret("fork", 1));
+	if (is_builtin(cmd) > 0)
+		return (execute_builtin(cmd, envp, token, line));
 	if (pid == 0)
 	{
 		handle_redirections(cmd->redirections);

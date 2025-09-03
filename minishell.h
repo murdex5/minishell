@@ -97,9 +97,20 @@ typedef struct s_token
 	struct s_token		*next;
 }						t_token;
 
+int						ft_echo(char **argv);
+int						ft_cd(char **argv, char **envp);
+int						ft_pwd(void);
+int						ft_export(char **argv, char **envp);
+int						ft_unset(char **argv, char **envp);
+int						ft_env(char **envp);
+int						ft_exit_builtin(char **argv, t_token *token,
+							char *line);
+
+int						execute_builtin(t_command_node *cmd, char **envp,
+							t_token *token, char *line);
 char					**copy_environment(char *envp[]);
 void					free_environment(char **msh_envp);
-//int						is_builtin(t_command_node *node);
+int						is_builtin(t_command_node *node);
 void					printf_err(char *msg, t_node_type type);
 void					execve_error(t_command_node *cmd);
 void					command_not_found(t_command_node *cmd);
@@ -113,15 +124,18 @@ int						perror_ret(char *msg, int i);
 void					free_paths(char **paths);
 int						close_exit(int fd1, int fd2, char **envp,
 							t_ast_node *node);
-int						exec_ast(t_ast_node *node, char **envp);
+int						exec_ast(t_ast_node *node, char **envp, t_token *token,
+							char *line);
 int						exec_pipe_node(t_pipe_node *pipe_node, char **envp);
-int						exec_simple_command(t_command_node *cmd, char **envp);
+int						exec_simple_command(t_command_node *cmd, char **envp,
+							t_token *token, char *line);
 void					handle_redirections(t_redirect *redir_list);
 char					*resolve_command_path(const char *cmd_name,
 							char **envp);
 char					**get_path(char *env[]);
 t_ast_node				*parse(t_token *token);
-int						execute_ast_pipeline(t_ast_node *node, char **envp);
+int						execute_ast_pipeline(t_ast_node *node, char **envp,
+							t_token *token, char *line);
 int						put_content(t_list *tmp, char **array, int *i);
 t_redirect_type			get_redir_type(t_tokentype token_type);
 void					free_ast(t_ast_node *node);

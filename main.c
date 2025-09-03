@@ -23,43 +23,57 @@ void	signal_handler(int sig)
 	rl_redisplay();
 }
 
-void print_tokens(t_token *head)
+void	print_tokens(t_token *head)
 {
-    t_token *current = head;
-    int count = 0;
+	t_token	*current;
+	int		count;
 
-    printf("=== TOKEN LIST ===\n");
-    while (current != NULL)
-    {
-        printf("[%d] Value: '%s'\n", count, current->value);
-        printf("     Type:  ");
-        
-        switch (current->type)
-        {
-            case TOKEN_WORD:        printf("WORD"); break;
-            case TOKEN_PIPE:        printf("PIPE"); break;
-            case TOKEN_REDIR_IN:   printf("REDIR_IN"); break;
-            case TOKEN_REDIR_OUT:  printf("REDIR_OUT"); break;
-            case TOKEN_REDIR_APPEND: printf("REDIR_APPEND"); break;
-            case TOKEN_HEREDOC:     printf("HEREDOC"); break;
-            case TOKEN_EOF:         printf("EOF"); break;
-            default:                printf("UNKNOWN (%d)", current->type);
-        }
-        printf("\n\n");
-        
-        current = current->next;
-        count++;
-    }
-    printf("=== TOTAL: %d tokens ===\n", count);
+	current = head;
+	count = 0;
+	printf("=== TOKEN LIST ===\n");
+	while (current != NULL)
+	{
+		printf("[%d] Value: '%s'\n", count, current->value);
+		printf("     Type:  ");
+		switch (current->type)
+		{
+		case TOKEN_WORD:
+			printf("WORD");
+			break ;
+		case TOKEN_PIPE:
+			printf("PIPE");
+			break ;
+		case TOKEN_REDIR_IN:
+			printf("REDIR_IN");
+			break ;
+		case TOKEN_REDIR_OUT:
+			printf("REDIR_OUT");
+			break ;
+		case TOKEN_REDIR_APPEND:
+			printf("REDIR_APPEND");
+			break ;
+		case TOKEN_HEREDOC:
+			printf("HEREDOC");
+			break ;
+		case TOKEN_EOF:
+			printf("EOF");
+			break ;
+		default:
+			printf("UNKNOWN (%d)", current->type);
+		}
+		printf("\n\n");
+		current = current->next;
+		count++;
+	}
+	printf("=== TOTAL: %d tokens ===\n", count);
 }
-
 
 int	main(int argc, char **argv, char *envp[])
 {
 	char				*line;
 	struct sigaction	sa;
 	t_token				*token;
-	t_ast_node *pipe;
+	t_ast_node			*pipe;
 
 	(void)argc;
 	(void)argv;
@@ -80,7 +94,7 @@ int	main(int argc, char **argv, char *envp[])
 			add_history(line);
 			token = init_tokens(line);
 			pipe = parse(token);
-			execute_ast_pipeline(pipe, envp);
+			execute_ast_pipeline(pipe, envp, token, line);
 			token = NULL;
 		}
 		free(line);

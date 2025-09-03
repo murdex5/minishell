@@ -12,7 +12,26 @@
 
 #include "../../../minishell.h"
 
-// void echo(char *str, char *envp[])
-// {
+int	ft_echo(char **argv)
+{
+	int	i;
+	int	new_line;
 
-// }
+	i = 1;
+	new_line = 1;
+	if (argv[i] && ft_strncmp(argv[1], "-n", ft_strlen(argv[1])) == 0)
+	{
+		new_line = 0;
+		i++;
+	}
+	while (argv[i] != '\0')
+	{
+		ft_putstr_fd(argv[i], STDOUT_FILENO);
+		if (argv[i + 1])
+			ft_putstr_fd(" ", STDOUT_FILENO);
+		i++;
+	}
+	if (new_line)
+		ft_putstr_fd("\n", STDOUT_FILENO);
+	return (0);
+}
