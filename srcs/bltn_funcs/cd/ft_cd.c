@@ -18,40 +18,34 @@ int	add_env_variable(char ***envp_ptr, const char *new_var_str)
 	char	**new_envp;
 
 	if (!envp_ptr || !*envp_ptr || !new_var_str)
-		return (1); // Invalid arguments
+		return (1);
 	count = 0;
 	while ((*envp_ptr)[count] != NULL)
 		count++;
-	// Allocate a new array with space for one more pointer + NULL terminator
 	new_envp = malloc(sizeof(char *) * (count + 2));
 	if (!new_envp)
 	{
 		perror("minishell: malloc failed");
-		return (1); // Malloc failure
+		return (1);
 	}
-	// Copy old pointers to the new array
 	count = 0;
 	while ((*envp_ptr)[count] != NULL)
 	{
 		new_envp[count] = (*envp_ptr)[count];
 		count++;
 	}
-	// Add the new variable string (create a fresh copy)
 	new_envp[count] = ft_strdup(new_var_str);
 	if (!new_envp[count])
 	{
 		perror("minishell: ft_strdup failed");
-		free(new_envp); // Clean up the newly allocated array
+		free(new_envp); 
 		return (1);
 	}
-	// Add the NULL terminator at the end
 	new_envp[count + 1] = NULL;
-	// Free the OLD array of pointers
+
 	free(*envp_ptr);
-	// CRITICAL: Update the original pointer in the calling function to point
-	// to the new, larger array.
 	*envp_ptr = new_envp;
-	return (0); // Success
+	return (0);
 }
 
 void	update_env_var(char ***envp_ptr, const char *var_name,
