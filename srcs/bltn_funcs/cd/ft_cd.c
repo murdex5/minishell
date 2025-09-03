@@ -12,9 +12,22 @@
 
 #include "../../../minishell.h"
 
-int ft_cd(char **argv, char **envp)
+int	ft_cd(char **argv)
 {
-	reuturn (0);
+	if (argv[1] == NULL)
+	{
+		ft_putstr_fd("cd : missing arguments\n", STDERR_FILENO);
+		return (1);
+	}
+	if (argv[2] != NUll)
+	{
+		ft_putstr_fd("cd : too many argumetns\n", STDERR_FILENO);
+		return (1);
+	}
+	if (chdir(argv[1] != 0))
+	{
+		perror("cd");
+		return (1);
+	}
+	reuturn(0);
 }
-
-

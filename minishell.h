@@ -98,7 +98,7 @@ typedef struct s_token
 }						t_token;
 
 int						ft_echo(char **argv);
-int						ft_cd(char **argv, char **envp);
+int						ft_cd(char **argv);
 int						ft_pwd(void);
 int						ft_export(char **argv, char **envp);
 int						ft_unset(char **argv, char **envp);
