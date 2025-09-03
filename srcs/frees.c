@@ -82,3 +82,18 @@ void	free_paths(char **paths)
 	}
 	free(paths);
 }
+
+void	free_environment(char **msh_envp)
+{
+	int	i;
+
+	if (!msh_envp)
+		return;
+	i = 0;
+	while (msh_envp[i])
+	{
+		free(msh_envp[i]);
+		i++;
+	}
+	free(msh_envp);
+}

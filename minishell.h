@@ -97,8 +97,9 @@ typedef struct s_token
 	struct s_token		*next;
 }						t_token;
 
-int						check_cmd(t_command_node *node, char *envp[]);
-int						check_bltn(t_ast_node *pipe, char *envp[]);
+char					**copy_environment(char *envp[]);
+void					free_environment(char **msh_envp);
+//int						is_builtin(t_command_node *node);
 void					printf_err(char *msg, t_node_type type);
 void					execve_error(t_command_node *cmd);
 void					command_not_found(t_command_node *cmd);

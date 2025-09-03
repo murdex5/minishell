@@ -12,24 +12,26 @@
 
 #include "../minishell.h"
 
-int	check_cmd(t_command_node *node, char *envp[])
-{
-	char	**argv;
+// int	is_builtin(t_command_node *node)
+// {
+// 	char	*cmd_name;
 
-	argv = node->argv;
-	printf("%s\n%s\n", node->argv[0], envp[0]);
-	if (ft_strlcpy(argv[0], "echo", ft_strlen("echo")) == 0)
-		return (1);
-	else if (ft_strlcpy(argv[0], "cd", ft_strlen("cd")) == 0)
-		return (2);
-	else if (ft_strlcpy(argv[0], "pwd", ft_strlen("pwd")) == 0)
-		return (3);
-	else if (ft_strlcpy(argv[0], "export", ft_strlen("export")) == 0)
-		return (4);
-	else if (ft_strlcpy(argv[0], "unset", ft_strlen("unset")) == 0)
-		return (5);
-	else if (ft_strlcpy(argv[0], "env", ft_strlen("env")) == 0)
-		return (6);
-	else
-		return (0);
-}
+// 	if (!node || !node->argv || !node->argv[0])
+// 		return (0);
+// 	cmd_name = node->argv[0];
+// 	if (ft_strncmp(cmd_name, "echo") == 0)
+// 		return (1);
+// 	if (ft_strncmp(cmd_name, "cd") == 0)
+// 		return (2);
+// 	if (ft_strncmp(cmd_name, "pwd") == 0)
+// 		return (3);
+// 	if (ft_strncmp(cmd_name, "export") == 0)
+// 		return (4);
+// 	if (ft_strncmp(cmd_name, "unset") == 0)
+// 		return (5);
+// 	if (ft_strncmp(cmd_name, "env") == 0)
+// 		return (6);
+// 	if (ft_strncmp(cmd_name, "exit") == 0)
+// 		return (7);
+// 	return (0);
+// }

@@ -56,33 +56,31 @@ int	get_array_len(char **tokens)
 	return (i);
 }
 
-// int	chec_char(char *c)
-// {
-// 	if (line[i] != ' ')
-// 	{
-// 		if (line)
-// 	}
-// }
+char	**copy_environment(char *envp[])
+{
+	int		count;
+	char	**new_envp;
+	int		i;
 
-// void	go_until(char *line, int *i)
-// {
-// 	if ()
-// }
-
-// int	get_count(char *line)
-// {
-// 	int	i;
-// 	int	count;
-
-// 	count = 0;
-// 	i = 0;
-// 	while (line[i] != '\0')
-// 	{
-// 		{
-// 			while (((line[i] >= 'A' && line[i] <= 'Z') || (line[i] >= 'a'
-// 						&& line[i] <= 'z')))
-// 				i++;
-// 			count++;
-// 		}
-// 	}
-// }
+	count = 0;
+	while (envp[count])
+		count++;
+	new_envp = (char **)malloc(sizeof(char *) * (count + 1));
+	if (!new_envp)
+		return (NULL);
+	i = 0;
+	while (i < count)
+	{
+		new_envp[i] = ft_strdup(envp[i]);
+		if (!new_envp[i])
+		{
+			while (i-- > 0)
+				free(new_envp[i]);
+			free(new_envp);
+			return (NULL);
+		}
+		i++;
+	}
+	new_envp[count] = NULL;
+	return (new_envp);
+}
