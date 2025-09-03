@@ -21,7 +21,7 @@ int	execute_builtin(t_command_node *cmd, char *envp[], t_token *token,
 	if (ft_strncmp(cmd_name, "echo", ft_strlen(cmd_name)) == 0)
 		return (ft_echo(cmd->argv));
 	if (ft_strncmp(cmd_name, "cd", ft_strlen(cmd_name)) == 0)
-		return (ft_cd(cmd->argv));
+		return (ft_cd(cmd->argv, envp));
 	if (ft_strncmp(cmd_name, "pwd", ft_strlen(cmd_name)) == 0)
 		return (ft_pwd());
 	if (ft_strncmp(cmd_name, "export", ft_strlen(cmd_name)) == 0)

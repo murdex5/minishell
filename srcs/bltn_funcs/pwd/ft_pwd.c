@@ -16,7 +16,7 @@ int	ft_pwd(void)
 {
 	char	cwd[1024];
 
-	if (getcwd(cwd, sizeof(cwd) != NULL))
+	if (getcwd(cwd, sizeof(cwd)) != NULL )
 	{
 		ft_putstr_fd(cwd, STDOUT_FILENO);
 		ft_putstr_fd("\n", STDOUT_FILENO);

@@ -110,7 +110,7 @@ int	check_exists(char **argv, char **envp)
 
 	i = 0;
 	variable_name = get_variable_name(argv);
-	while (evnp[i] != NULL)
+	while (envp[i] != NULL)
 	{
 		if (ft_strncmp(variable_name, envp[i], ft_strlen(variable_name) == 0))
 			return (i);
@@ -119,39 +119,59 @@ int	check_exists(char **argv, char **envp)
 	return (0);
 }
 
-int	add_new_variable(char **envp, int count, char **argv)
+int	add_new_variable(char ***envp_ptr, const char *new_var_str)
 {
-    char **new_envp;
+	char	**new_envp;
+	int		count;
 
-	new_envp = ft_realloc(envp, (count + 2) * sizof(char *));
+	// Count existing variables
+	count = 0;
+	while ((*envp_ptr)[count])
+		count++;
+
+	// Use malloc/copy/free pattern for safer error handling than realloc
+	new_envp = malloc((count + 2) * sizeof(char *));
 	if (!new_envp)
 	{
-		perror("realloc");
-		return (0);
+		perror("minishell: malloc");
+		return (0); // Failure
 	}
-	new_envp[count] = ft_strdup(argv[1]);
+
+	// Copy the old pointers to the new array
+	int i = 0;
+	while (i < count)
+	{
+		new_envp[i] = (*envp_ptr)[i];
+		i++;
+	}
+
+	// Add the new variable (a duplicated string)
+	new_envp[count] = ft_strdup(new_var_str);
 	if (!new_envp[count])
 	{
-		*envp = new_envp;
-		return (0);
+		// FIX 2: Proper cleanup on strdup failure.
+		// We free the new array we just allocated and leave the old one untouched.
+		perror("minishell: ft_strdup");
+		free(new_envp);
+		return (0); // Failure
 	}
+	
+	// Add the new NULL terminator
 	new_envp[count + 1] = NULL;
-	*envp = new_envp;
-	return (1);
+	
+	// Free the OLD array of pointers
+	free(*envp_ptr);
+	
+	// FIX 3: Update the CALLER'S pointer to point to our new array.
+	*envp_ptr = new_envp;
+	
+	return (1); // Success
 }
 
-int	ft_export(char **argv, char **envp)
+int	update_env_var1(char **envp, char **argv)
 {
-	int	count;
-	int	exists;
-
-	if (argv[1] == NULL)
-	{
-		print_envp(envp);
-		return (0);
-	}
-	if (!check_args(argv[1]))
-		return (1);
+	int exists;
+	
 	exists = check_exists(argv, envp);
 	if (exists > 0)
 	{
@@ -159,9 +179,23 @@ int	ft_export(char **argv, char **envp)
 		envp[exists] = ft_strdup(argv[1]);
 	}
 	else
-    {
-        if (!add_new_variable(envp, count, argv))
-            return (1);
-    }
+	{
+		if (!add_new_variable(&envp, argv[1]))
+			return (1);
+	}
+	return (0);
+}
+
+int	ft_export(char **argv, char **envp)
+{
+	if (argv[1] == NULL)
+	{
+		print_envp(envp);
 		return (0);
+	}
+	if (!check_args(argv[1]))
+		return (1);
+	if (update_env_var1(envp, argv))
+		return (1);
+	return (0);
 }

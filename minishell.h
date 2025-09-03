@@ -97,8 +97,10 @@ typedef struct s_token
 	struct s_token		*next;
 }						t_token;
 
+void	update_env_var(char ***envp_ptr, const char *var_name,
+		const char *value);
 int						ft_echo(char **argv);
-int						ft_cd(char **argv);
+int						ft_cd(char **argv, char **envp);
 int						ft_pwd(void);
 int						ft_export(char **argv, char **envp);
 // int						ft_unset(char **argv, char **envp);
