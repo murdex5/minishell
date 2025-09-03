@@ -24,7 +24,7 @@ int	ft_echo(char **argv)
 		new_line = 0;
 		i++;
 	}
-	while (argv[i] != '\0')
+	while (argv[i] != NULL)
 	{
 		ft_putstr_fd(argv[i], STDOUT_FILENO);
 		if (argv[i + 1])

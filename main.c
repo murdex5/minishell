@@ -74,12 +74,14 @@ int	main(int argc, char **argv, char *envp[])
 	struct sigaction	sa;
 	t_token				*token;
 	t_ast_node			*pipe;
+	char **envp_copy;
 
 	(void)argc;
 	(void)argv;
 	sa.sa_handler = signal_handler;
 	pipe = NULL;
 	token = NULL;
+	envp_copy = copy_environment(envp);
 	if (!process_signals(&sa))
 		exit(1);
 	while (1)
@@ -94,12 +96,13 @@ int	main(int argc, char **argv, char *envp[])
 			add_history(line);
 			token = init_tokens(line);
 			pipe = parse(token);
-			execute_ast_pipeline(pipe, envp, token, line);
+			execute_ast_pipeline(pipe, envp_copy, token, line);
 			token = NULL;
 		}
 		free(line);
 	}
 	free(line);
 	free_on_exiting_list(token);
+	free_environment(envp_copy);
 	return (0);
 }

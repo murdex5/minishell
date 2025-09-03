@@ -14,17 +14,21 @@
 
 int	ft_cd(char **argv)
 {
+	char old_pwd[1024];
+	char new_pwd[1024];
+
+	if (getcwd(old_pwd, sizeof(old_pwd)))
 	if (argv[1] == NULL)
 	{
 		ft_putstr_fd("cd : missing arguments\n", STDERR_FILENO);
 		return (1);
 	}
-	if (argv[2] != NUll)
+	if (argv[2] != NULL)
 	{
 		ft_putstr_fd("cd : too many argumetns\n", STDERR_FILENO);
 		return (1);
 	}
-	if (chdir(argv[1] != 0))
+	if (chdir(argv[1] != ))
 	{
 		perror("cd");
 		return (1);

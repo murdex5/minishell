@@ -101,12 +101,12 @@ int						ft_echo(char **argv);
 int						ft_cd(char **argv);
 int						ft_pwd(void);
 int						ft_export(char **argv, char **envp);
-int						ft_unset(char **argv, char **envp);
-int						ft_env(char **envp);
+// int						ft_unset(char **argv, char **envp);
+// int						ft_env(char **envp);
 int						ft_exit_builtin(char **argv, t_token *token,
 							char *line);
 
-int						execute_builtin(t_command_node *cmd, char **envp,
+int						execute_builtin(t_command_node *cmd, char *envp[],
 							t_token *token, char *line);
 char					**copy_environment(char *envp[]);
 void					free_environment(char **msh_envp);
@@ -116,9 +116,9 @@ void					execve_error(t_command_node *cmd);
 void					command_not_found(t_command_node *cmd);
 void					perror_exit(char *msg, int i);
 void					handle_left_child(int *pipe_fd, t_ast_node *node,
-							char **envp);
+							char **envp, t_token *token, char *line);
 void					handle_right_child(int *pipe_fd, t_ast_node *node,
-							char **envp);
+							char **envp, t_token *token, char *line);
 void					close2_fd(int fd1, int fd2);
 int						perror_ret(char *msg, int i);
 void					free_paths(char **paths);
@@ -126,7 +126,8 @@ int						close_exit(int fd1, int fd2, char **envp,
 							t_ast_node *node);
 int						exec_ast(t_ast_node *node, char **envp, t_token *token,
 							char *line);
-int						exec_pipe_node(t_pipe_node *pipe_node, char **envp);
+int						exec_pipe_node(t_pipe_node *pipe_node, char **envp,
+							t_token *token, char *line);
 int						exec_simple_command(t_command_node *cmd, char **envp,
 							t_token *token, char *line);
 void					handle_redirections(t_redirect *redir_list);
