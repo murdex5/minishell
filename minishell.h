@@ -97,18 +97,19 @@ typedef struct s_token
 	struct s_token		*next;
 }						t_token;
 
-void	update_env_var(char ***envp_ptr, const char *var_name,
-		const char *value);
+int	ft_strcmp(const char *s1, const char *s2);
+void					update_env_var(char ***envp_ptr, const char *var_name,
+							const char *value);
 int						ft_echo(char **argv);
-int						ft_cd(char **argv, char **envp);
+int						ft_cd(char **argv, char ***envp_ptr);
 int						ft_pwd(void);
-int						ft_export(char **argv, char **envp);
+int						ft_export(char **argv, char ***envp_ptr);
 // int						ft_unset(char **argv, char **envp);
 // int						ft_env(char **envp);
 int						ft_exit_builtin(char **argv, t_token *token,
 							char *line);
 
-int						execute_builtin(t_command_node *cmd, char *envp[],
+int						execute_builtin(t_command_node *cmd, char ***envp_ptr,
 							t_token *token, char *line);
 char					**copy_environment(char *envp[]);
 void					free_environment(char **msh_envp);
@@ -137,7 +138,7 @@ char					*resolve_command_path(const char *cmd_name,
 							char **envp);
 char					**get_path(char *env[]);
 t_ast_node				*parse(t_token *token);
-int						execute_ast_pipeline(t_ast_node *node, char **envp,
+int						execute_ast_pipeline(t_ast_node *node, char ***envp_ptr,
 							t_token *token, char *line);
 int						put_content(t_list *tmp, char **array, int *i);
 t_redirect_type			get_redir_type(t_tokentype token_type);

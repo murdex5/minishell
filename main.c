@@ -14,14 +14,14 @@
 
 static volatile sig_atomic_t	g_signal_recieved = 0;
 
-void	signal_handler(int sig)
-{
-	g_signal_recieved = sig;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
+// void	signal_handler(int sig)
+// {
+// 	(void)sig;
+// 	write(1, "\n", 1);
+// 	rl_replace_line("", 0);
+// 	rl_on_new_line();
+// 	rl_redisplay();
+// }
 
 void	print_tokens(t_token *head)
 {
@@ -68,17 +68,57 @@ void	print_tokens(t_token *head)
 	printf("=== TOTAL: %d tokens ===\n", count);
 }
 
+void	save_terminal_state(struct termios *original_state)
+{
+	tcgetattr(STDIN_FILENO, original_state);
+}
+
+void	restore_terminal_state(struct termios *original_state)
+{
+	tcsetattr(STDIN_FILENO, TCSANOW, original_state);
+}
+
+void	reset_terminal_state(void)
+{
+	struct termios	new_state;
+	struct termios	original_state;
+
+	save_terminal_state(&original_state);
+	new_state = original_state;
+	// Reset to sane defaults
+	new_state.c_lflag |= (ECHO | ICANON | ISIG);
+	new_state.c_lflag &= ~(ECHOCTL | IEXTEN);
+	new_state.c_iflag |= (ICRNL | IXON);
+	new_state.c_oflag |= (OPOST | ONLCR);
+	tcsetattr(STDIN_FILENO, TCSANOW, &new_state);
+	// Also reset readline's internal state
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+void signal_handler(int sig)
+{
+	(void)sig;
+	write(STDOUT_FILENO, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+}
+
+
 int	main(int argc, char **argv, char *envp[])
 {
 	char				*line;
 	struct sigaction	sa;
 	t_token				*token;
 	t_ast_node			*pipe;
-	char **envp_copy;
+	char				**envp_copy;
+	struct termios		original_term;
 
 	(void)argc;
 	(void)argv;
-	sa.sa_handler = signal_handler;
+	// Save original terminal state
+	save_terminal_state(&original_term);
 	pipe = NULL;
 	token = NULL;
 	envp_copy = copy_environment(envp);
@@ -87,22 +127,32 @@ int	main(int argc, char **argv, char *envp[])
 	while (1)
 	{
 		if (g_signal_recieved)
+		{
 			g_signal_recieved = 0;
+			reset_terminal_state(); // Reset on signal
+		}
 		line = readline("minishell: ");
+		printf("DEBUG: Read line: '%s'\n", line);
 		if (line == NULL)
+		{
+			restore_terminal_state(&original_term);
 			return (ft_exit(line, token), 0);
+		}
 		if (*line)
 		{
 			add_history(line);
 			token = init_tokens(line);
 			pipe = parse(token);
-			execute_ast_pipeline(pipe, envp_copy, token, line);
+			// Execute and immediately reset terminal
+			execute_ast_pipeline(pipe, &envp_copy, token, line);
+			reset_terminal_state(); // CRITICAL: Reset after execution
+			free_on_exiting_list(token);
 			token = NULL;
+			pipe = NULL;
 		}
 		free(line);
 	}
-	free(line);
-	free_on_exiting_list(token);
+	restore_terminal_state(&original_term);
 	free_environment(envp_copy);
 	return (0);
 }

@@ -88,7 +88,7 @@ void	update_env_var(char ***envp_ptr, const char *var_name,
 	free(new_var_str); // add_env_variable should make its own copy
 }
 
-int	ft_cd(char **argv, char **envp)
+int ft_cd(char **argv, char ***envp_ptr)
 {
 	char	old_pwd[PATH_MAX];
 	char	new_pwd[PATH_MAX];
@@ -119,7 +119,7 @@ int	ft_cd(char **argv, char **envp)
 		perror("pwd");
 		return (1);
 	}
-	update_env_var(&envp, "OLDPWD", old_pwd);
-	update_env_var(&envp, "PWD", new_pwd);
+	update_env_var(envp_ptr, "OLDPWD", old_pwd);
+	update_env_var(envp_ptr, "PWD", new_pwd);
 	return(0);
 }

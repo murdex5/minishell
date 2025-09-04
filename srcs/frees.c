@@ -47,16 +47,42 @@ void	free_tokens(char **tokens)
 
 void	free_ast(t_ast_node *node)
 {
+	t_command_node	*cmd;
+	t_redirect		*curr;
+	t_redirect		*next;
+	t_pipe_node		*pipe;
+
 	if (!node)
 		return ;
+	if (node->type == NODE_COMMAND)
+	{
+		cmd = (t_command_node *)node;
+		free_tokens(cmd->argv);
+		curr = cmd->redirections;
+		while (curr)
+		{
+			next = curr->next;
+			free(curr->filename);
+			free(curr);
+			curr = next;
+		}
+	}
+	else if (node->type == NODE_PIPE)
+	{
+		pipe = (t_pipe_node *)node;
+		free_ast(pipe->left);
+		free_ast(pipe->right);
+	}
 	free(node);
 }
 
 void	free_on_exiting_list(t_token *tokens)
 {
-	t_token *current;
-	t_token *next;
+	t_token	*current;
+	t_token	*next;
 
+	if (!tokens)
+		return ;
 	current = tokens;
 	while (current != NULL)
 	{
@@ -88,7 +114,7 @@ void	free_environment(char **msh_envp)
 	int	i;
 
 	if (!msh_envp)
-		return;
+		return ;
 	i = 0;
 	while (msh_envp[i])
 	{
@@ -96,4 +122,19 @@ void	free_environment(char **msh_envp)
 		i++;
 	}
 	free(msh_envp);
+}
+
+void	free_tokens_array(char **tokens)
+{
+	int	i;
+
+	if (!tokens)
+		return ;
+	i = 0;
+	while (tokens[i])
+	{
+		free(tokens[i]);
+		i++;
+	}
+	free(tokens);
 }

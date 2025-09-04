@@ -12,12 +12,16 @@
 
 #include "../../minishell.h"
 
-int	execute_ast_pipeline(t_ast_node *node, char **envp, t_token *token,
+int	execute_ast_pipeline(t_ast_node *node, char ***envp_ptr, t_token *token,
 		char *line)
 {
+	int	result;
+
 	if (!node)
 		return (0);
-	return (exec_ast(node, envp, token, line));
+	result = exec_ast(node,*envp_ptr, token, line);
+	free_ast(node);
+	return (result);
 }
 
 int	exec_ast(t_ast_node *node, char **envp, t_token *token, char *line)
@@ -43,7 +47,7 @@ int	exec_simple_command(t_command_node *cmd, char **envp, t_token *token,
 	if (pid == -1)
 		return (perror_ret("fork", 1));
 	if (is_builtin(cmd) > 0)
-		return (execute_builtin(cmd, envp, token, line));
+		return (execute_builtin(cmd, &envp, token, line));
 	if (pid == 0)
 	{
 		handle_redirections(cmd->redirections);
