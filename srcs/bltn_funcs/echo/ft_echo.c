@@ -19,19 +19,19 @@ int	ft_echo(char **argv)
 
 	i = 1;
 	new_line = 1;
-	if (argv[i] && ft_strncmp(argv[1], "-n", ft_strlen(argv[1])) == 0)
+	if (argv[i] && ft_strncmp(argv[1], "-n", 3) == 0)
 	{
 		new_line = 0;
 		i++;
 	}
 	while (argv[i] != NULL)
 	{
-		ft_putstr_fd(argv[i], STDOUT_FILENO);
+		write(STDOUT_FILENO, argv[i], ft_strlen(argv[i]));
 		if (argv[i + 1])
-			ft_putstr_fd(" ", STDOUT_FILENO);
+			write(STDOUT_FILENO, " ", 1);
 		i++;
 	}
 	if (new_line)
-		ft_putstr_fd("\n", STDOUT_FILENO);
+		write(STDOUT_FILENO, "\n", 1);
 	return (0);
 }
