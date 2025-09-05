@@ -77,6 +77,7 @@ int	main(int argc, char **argv, char *envp[])
 	t_ast_node			*pipe;
 	char				**envp_copy;
 	struct termios		original_term;
+	t_shell *shell;
 
 	(void)argc;
 	(void)argv;
