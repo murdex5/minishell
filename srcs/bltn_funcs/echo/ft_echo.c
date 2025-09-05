@@ -6,7 +6,7 @@
 /*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 22:16:08 by kadferna          #+#    #+#             */
-/*   Updated: 2025/09/05 13:19:14 by anjbaiju         ###   ########.fr       */
+/*   Updated: 2025/09/05 13:54:51 by anjbaiju         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,25 +84,34 @@ char	*check_variables(char *str, char ***envp_ptr)
 	return (value);
 }
 
+static int	process_n_flags(char **argv, int *i)
+{
+	int	j;
+	int	new_line;
+
+	new_line = 1;
+	j = 2;
+	while (argv[*i] && argv[*i][0] == '-' && argv[*i][1] == 'n')
+	{
+		while (argv[*i][j] == 'n')
+			j++;
+		if (argv[*i][j] != '\0')
+			break ;
+		new_line = 0;
+		(*i)++;
+		j = 2;
+	}
+	return (new_line);
+}
+
 int	ft_echo(char **argv, char ***envp_ptr)
 {
 	int		i;
 	int		new_line;
 	char	*str;
-	int		j;
 
 	i = 1;
-	new_line = 1;
-	j = 2;
-	while (argv[i] && argv[i][0] == '-' && argv[i][1] == 'n')
-	{
-		while (argv[i][j] == 'n')
-			j++;
-		if (argv[i][j] != '\0')
-			break ;
-		new_line = 0;
-		i++;
-	}
+	new_line = process_n_flags(argv, &i);
 	while (argv[i] != NULL)
 	{
 		str = process_arguments(argv[i]);
