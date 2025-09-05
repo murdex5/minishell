@@ -19,7 +19,7 @@ int	execute_builtin(t_command_node *cmd, char ***envp, t_token *token,
 
 	cmd_name = cmd->argv[0];
 	if (ft_strncmp(cmd_name, "echo", ft_strlen(cmd_name)) == 0)
-		return (ft_echo(cmd->argv));
+		return (ft_echo(cmd->argv, envp));
 	if (ft_strncmp(cmd_name, "cd", ft_strlen(cmd_name)) == 0)
 		return (ft_cd(cmd->argv, *envp));
 	if (ft_strncmp(cmd_name, "pwd", ft_strlen(cmd_name)) == 0)

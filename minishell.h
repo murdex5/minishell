@@ -102,7 +102,8 @@ void					restore_terminal_state(struct termios *original_state);
 int						ft_strcmp(const char *s1, const char *s2);
 // void					update_env_var(char ***envp_ptr, const char *var_name,
 // 							const char *value);
-int						ft_echo(char **argv);
+int						ft_echo(char **argv, char ***envp_ptr);
+int						check_exists(char **argv, char **envp);
 int						ft_cd(char **argv, char **envp);
 int						ft_pwd(void);
 int						ft_export(char **argv, char ***envp_ptr);
