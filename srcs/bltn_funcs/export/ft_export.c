@@ -12,196 +12,191 @@
 
 #include "../../../minishell.h"
 
-static int	is_valid_identifier(char *str)
+
+
+char	*get_variable_name(char **argv)
+{
+	char	*variable_name;
+	int		i;
+	int		count;
+
+	if (!argv || !argv[1])
+		return (NULL);
+	i = 0;
+	while (argv[1][i] && argv[1][i] != '=')
+		i++;
+	count = i;
+	variable_name = malloc(sizeof(char) * (count + 1));
+	if (!variable_name)
+		return (NULL);
+	i = 0;
+	while (i < count)
+	{
+		variable_name[i] = argv[1][i];
+		i++;
+	}
+	variable_name[count] = '\0';
+	return (variable_name);
+}
+
+int	check_exists(char **argv, char **envp)
+{
+	int		i;
+	char	*variable_name;
+	size_t	len;
+
+	variable_name = get_variable_name(argv);
+	if (!variable_name || *variable_name == '\0')
+	{
+		if (variable_name)
+			free(variable_name);
+		return (-1);
+	}
+	len = ft_strlen(variable_name);
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		if (ft_strncmp(variable_name, envp[i], len) == 0 && (envp[i][len] == '='
+				|| envp[i][len] == '\0'))
+		{
+			free(variable_name);
+			return (i);
+		}
+		i++;
+	}
+	free(variable_name);
+	return (-1);
+}
+
+int	add_new_variable(char ***envp_ptr, const char *new_var_str)
+{
+	char	**new_envp;
+	int		count;
+	int		i;
+
+	count = 0;
+	while ((*envp_ptr)[count])
+		count++;
+	new_envp = malloc((count + 2) * sizeof(char *));
+	if (!new_envp)
+	{
+		perror("minishell: malloc");
+		return (0); // Failure
+	}
+	i = 0;
+	while (i < count)
+	{
+		new_envp[i] = (*envp_ptr)[i];
+		i++;
+	}
+	new_envp[count] = ft_strdup(new_var_str);
+	if (!new_envp[count])
+	{
+		perror("minishell: ft_strdup");
+		free(new_envp);
+		return (0);
+	}
+	new_envp[count + 1] = NULL;
+	free(*envp_ptr);
+	*envp_ptr = new_envp;
+	return (1);
+}
+
+int	count_envp(char **envp)
 {
 	int	i;
 
-	if (!str || !*str)
-		return (0);
-	if (!ft_isalpha(str[0]) && str[0] != '_')
-		return (0);
-	i = 1;
-	while (str[i] && str[i] != '=')
-	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
-			return (0);
+	i = 0;
+	while (envp[i] != NULL)
 		i++;
+	return (i);
+}
+
+int	check_args(char *argv)
+{
+	if (argv[0] >= '0' && argv[0] <= '9')
+	{
+		ft_putstr_fd("export : ", STDERR_FILENO);
+		ft_putstr_fd(argv, STDERR_FILENO);
+		ft_putstr_fd(" is not a valid identifier\n", STDERR_FILENO);
+		return (0);
 	}
 	return (1);
 }
 
-static void	print_env_var(char *var)
+void	sort_envp(char **copy_envp)
 {
-	char	*equals;
-	int		name_len;
-
-	ft_putstr_fd("declare -x ", STDOUT_FILENO);
-	equals = ft_strchr(var, '=');
-	if (equals)
-	{
-		name_len = equals - var;
-		write(STDOUT_FILENO, var, name_len + 1);
-		ft_putchar_fd('"', STDOUT_FILENO);
-		ft_putstr_fd(equals + 1, STDOUT_FILENO);
-		ft_putchar_fd('"', STDOUT_FILENO);
-	}
-	else
-	{
-		ft_putstr_fd(var, STDOUT_FILENO);
-	}
-	ft_putchar_fd('\n', STDOUT_FILENO);
-}
-
-static int	count_env_vars(char **envp)
-{
-	int	count;
-
-	count = 0;
-	if (envp)
-	{
-		while (envp[count])
-			count++;
-	}
-	return (count);
-}
-
-static void	copy_env_recursive(char **dest, char **src, int index)
-{
-	if (!src || !src[index])
-		return;
-	dest[index] = src[index];
-	copy_env_recursive(dest, src, index + 1);
-}
-
-static void	bubble_sort_recursive(char **arr, int n, int i, int j)
-{
+	int		i;
+	int		sorted;
 	char	*temp;
 
-	if (i >= n - 1)
-		return;
-	if (j >= n - i - 1)
+	if (!copy_envp || !copy_envp[0])
+		return ;
+	sorted = 0;
+	while (!sorted)
 	{
-		bubble_sort_recursive(arr, n, i + 1, 0);
-		return;
+		sorted = 1;
+		i = 1;
+		while (copy_envp[i])
+		{
+			if (ft_strncmp(copy_envp[i], copy_envp[i - 1],
+					ft_strlen(copy_envp[i])) < 0)
+			{
+				temp = copy_envp[i];
+				copy_envp[i] = copy_envp[i - 1];
+				copy_envp[i - 1] = temp;
+				sorted = 0;
+			}
+			i++;
+		}
 	}
-	if (ft_strcmp(arr[j], arr[j + 1]) > 0)
+}
+
+void	print_envp(char **envp)
+{
+	int	i;
+	i = 0;
+	sort_envp(envp);
+	while (envp[i])
 	{
-		temp = arr[j];
-		arr[j] = arr[j + 1];
-		arr[j + 1] = temp;
+		printf("declare -x %s\n", envp[i]);
+		i++;
 	}
-	bubble_sort_recursive(arr, n, i, j + 1);
 }
-
-static void	print_sorted_env_recursive(char **envp, int index, int count)
+int	update_envp(char ***envp_ptr, char **argv)
 {
-	if (index >= count)
-		return;
-	print_env_var(envp[index]);
-	print_sorted_env_recursive(envp, index + 1, count);
-}
+	int	exists_index;
 
-static void	sort_and_print_env(char **envp)
-{
-	int		count;
-	char	**env_copy;
-
-	count = count_env_vars(envp);
-	if (count == 0)
-		return;
-	env_copy = malloc(sizeof(char *) * (count + 1));
-	if (!env_copy)
-		return;
-	copy_env_recursive(env_copy, envp, 0);
-	env_copy[count] = NULL;
-	bubble_sort_recursive(env_copy, count, 0, 0);
-	print_sorted_env_recursive(env_copy, 0, count);
-	free(env_copy);
-}
-
-static char	**find_env_var_recursive(char **env, const char *name, size_t name_len, int index)
-{
-	if (!env || !env[index])
-		return (NULL);
-	if (ft_strncmp(env[index], name, name_len) == 0 && 
-		(env[index][name_len] == '=' || env[index][name_len] == '\0'))
-		return (&env[index]);
-	return (find_env_var_recursive(env, name, name_len, index + 1));
-}
-
-static int	add_or_update_env_var(t_shell *shell, const char *var)
-{
-	char	*equals;
-	size_t	name_len;
-	char	**var_ptr;
-	char	**new_env;
-	int		count;
-	int		i;
-
-	equals = ft_strchr(var, '=');
-	name_len = equals ? (size_t)(equals - var) : ft_strlen(var);
-	var_ptr = find_env_var_recursive(shell->env, var, name_len, 0);
-	
-	if (var_ptr && shell->env_copied)
+	exists_index = check_exists(argv, *envp_ptr);
+	if (exists_index >= 0)
 	{
-		free(*var_ptr);
-		*var_ptr = ft_strdup(var);
-		return (*var_ptr ? 0 : 1);
+		free((*envp_ptr)[exists_index]);
+		(*envp_ptr)[exists_index] = ft_strdup(argv[1]);
+		if (!(*envp_ptr)[exists_index])
+			return (1);
 	}
-	
-	count = count_env_vars(shell->env);
-	new_env = malloc(sizeof(char *) * (count + 2));
-	if (!new_env)
-		return (1);
-	
-	i = -1;
-	while (++i < count)
-		new_env[i] = shell->env[i];
-	
-	new_env[count] = ft_strdup(var);
-	new_env[count + 1] = NULL;
-	
-	if (shell->env_copied)
-		free(shell->env);
-	
-	shell->env = new_env;
-	shell->env_copied = 1;
-	return (0);
+	else 
+	{
+		if (!add_new_variable(envp_ptr, argv[1]))
+			return (1);
+	}
+	return (0); // Success
 }
 
-static int	process_export_args(t_shell *shell, char **argv, int index, int *ret)
-{
-	if (!argv[index])
-		return (*ret);
-	
-	if (!is_valid_identifier(argv[index]))
-	{
-		ft_putstr_fd("export: `", STDERR_FILENO);
-		ft_putstr_fd(argv[index], STDERR_FILENO);
-		ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-		*ret = 1;
-		return (process_export_args(shell, argv, index + 1, ret));
-	}
-	
-	if (add_or_update_env_var(shell, argv[index]) != 0)
-	{
-		ft_putstr_fd("export: memory allocation error\n", STDERR_FILENO);
-		return (1);
-	}
-	
-	return (process_export_args(shell, argv, index + 1, ret));
-}
 
-int	ft_export(char **argv, t_shell *shell)
-{
-	int	ret;
 
-	if (!argv[1])
+
+// Your main export function
+int	ft_export(char **argv, char ***envp_ptr)
+{
+	if (argv[1] == NULL)
 	{
-		sort_and_print_env(shell->env);
+		print_envp(*envp_ptr);
 		return (0);
 	}
-	
-	ret = 0;
-	return (process_export_args(shell, argv, 1, &ret));
+	if (!check_args(argv[1]))
+		return (1);
+	if (update_envp(envp_ptr, argv))
+		return (1);
+	return (0);
 }

@@ -98,18 +98,18 @@ typedef struct s_token
 }						t_token;
 
 int						ft_strcmp(const char *s1, const char *s2);
-void					update_env_var(char ***envp_ptr, const char *var_name,
-							const char *value);
+// void					update_env_var(char ***envp_ptr, const char *var_name,
+// 							const char *value);
 int						ft_echo(char **argv);
-int						ft_cd(char **argv, char ***envp_ptr);
+int ft_cd(char **argv, char **envp);
 int						ft_pwd(void);
-int						ft_export(char **argv, char ***envp_ptr);
+int	ft_export(char **argv, char ***envp_ptr);
 // int						ft_unset(char **argv, char **envp);
 // int						ft_env(char **envp);
 int						ft_exit_builtin(char **argv, t_token *token,
 							char *line);
 
-int						execute_builtin(t_command_node *cmd, char ***envp_ptr,
+int						execute_builtin(t_command_node *cmd, char ***envp,
 							t_token *token, char *line);
 char					**copy_environment(char *envp[]);
 void					free_environment(char **msh_envp);
@@ -127,11 +127,11 @@ int						perror_ret(char *msg, int i);
 void					free_paths(char **paths);
 int						close_exit(int fd1, int fd2, char **envp,
 							t_ast_node *node);
-int						exec_ast(t_ast_node *node, char **envp, t_token *token,
+int						exec_ast(t_ast_node *node, char ***envp, t_token *token,
 							char *line);
-int						exec_pipe_node(t_pipe_node *pipe_node, char **envp,
+int						exec_pipe_node(t_pipe_node *pipe_node, char ***envp,
 							t_token *token, char *line);
-int						exec_simple_command(t_command_node *cmd, char **envp,
+int						exec_simple_command(t_command_node *cmd, char ***envp,
 							t_token *token, char *line);
 void handle_redirections(t_redirect *redir_list);
 char					*resolve_command_path(const char *cmd_name,

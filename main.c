@@ -77,7 +77,6 @@ int	main(int argc, char **argv, char *envp[])
 	t_ast_node			*pipe;
 	char				**envp_copy;
 	struct termios		original_term;
-	t_shell *shell;
 
 	(void)argc;
 	(void)argv;
@@ -88,27 +87,23 @@ int	main(int argc, char **argv, char *envp[])
 	envp_copy = copy_environment(envp);
 	if (!process_signals(&sa))
 		exit(1);
-	
 	while (1)
 	{
 		if (g_signal_received)
 			g_signal_received = 0;
-			
 		line = readline("minishell: ");
-		
 		if (line == NULL) // EOF (Ctrl+D)
 		{
 			restore_terminal_state(&original_term);
 			return (ft_exit(line, token), 0);
 		}
-		
 		if (*line)
 		{
 			add_history(line);
 			token = init_tokens(line);
 			pipe = parse(token);
-			
-			if (pipe) {
+			if (pipe)
+			{
 				// Execute command
 				execute_ast_pipeline(pipe, &envp_copy, token, line);
 				free_on_exiting_list(token);
@@ -122,4 +117,3 @@ int	main(int argc, char **argv, char *envp[])
 	free_environment(envp_copy);
 	return (0);
 }
-
