@@ -56,7 +56,7 @@ int	check_on_evnp(char *variable_name, char **envp)
 	while (envp[i] != NULL)
 	{
 		if (ft_strncmp(variable_name, envp[i], len) == 0 && (envp[i][len] == '='
-			|| envp[i][len] == '\0'))
+				|| envp[i][len] == '\0'))
 		{
 			free(variable_name);
 			return (i);
@@ -75,7 +75,7 @@ char	*check_variables(char *str, char ***envp_ptr)
 
 	varaible_name = detect_varaible_name(str);
 	if (!varaible_name)
-		return (NULL);
+		return (str);
 	i = check_on_evnp(str, *envp_ptr);
 	if (i < 0)
 		value = NULL;
@@ -84,19 +84,27 @@ char	*check_variables(char *str, char ***envp_ptr)
 	return (value);
 }
 
+	int		j;
+
+	i = 1;
+	new_line = 1;
+	j = 2;
+	while (argv[i] && argv[i][0] == '-' && argv[i][1] == 'n')
+	{
+		while (argv[i][j] == 'n')
+			j++;
+		if (argv[i][j] != '\0')
+			break ;
+		new_line = 0;
+		i++;
+	}
+
 int	ft_echo(char **argv, char ***envp_ptr)
 {
 	int		i;
 	int		new_line;
 	char	*str;
 
-	i = 1;
-	new_line = 1;
-	if (argv[i] && ft_strncmp(argv[1], "-n", 3) == 0)
-	{
-		new_line = 0;
-		i++;
-	}
 	while (argv[i] != NULL)
 	{
 		str = process_arguments(argv[i]);
