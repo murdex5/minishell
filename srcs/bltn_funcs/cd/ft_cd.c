@@ -24,10 +24,7 @@ int	add_env_variable(char ***envp_ptr, const char *new_var_str)
 		count++;
 	new_envp = malloc(sizeof(char *) * (count + 2));
 	if (!new_envp)
-	{
-		perror("minishell: malloc failed");
-		return (1);
-	}
+		return (perror("minishell: malloc failed"), 1);
 	count = 0;
 	while ((*envp_ptr)[count] != NULL)
 	{
@@ -36,13 +33,8 @@ int	add_env_variable(char ***envp_ptr, const char *new_var_str)
 	}
 	new_envp[count] = ft_strdup(new_var_str);
 	if (!new_envp[count])
-	{
-		perror("minishell: ft_strdup failed");
-		free(new_envp); 
-		return (1);
-	}
+		return (perror("minishell: ft_strdup failed"), free(new_envp), 1);
 	new_envp[count + 1] = NULL;
-
 	free(*envp_ptr);
 	*envp_ptr = new_envp;
 	return (0);
@@ -67,7 +59,7 @@ void	update_env_var(char ***envp_ptr, const char *var_name,
 			value_len = ft_strlen(value);
 			new_var_str = malloc(name_len + value_len + 2);
 			if (!new_var_str)
-				return ; // Malloc failure
+				return ;
 			ft_memcpy(new_var_str, var_name, name_len);
 			new_var_str[name_len] = '=';
 			ft_memcpy(new_var_str + name_len + 1, value, value_len + 1);
@@ -76,19 +68,18 @@ void	update_env_var(char ***envp_ptr, const char *var_name,
 		}
 		i++;
 	}
-	// If we are here, the variable was not found, so we should add it.
 	value_len = ft_strlen(value);
 	new_var_str = malloc(name_len + value_len + 2);
 	if (!new_var_str)
-		return ; // Malloc failure
+		return ;
 	ft_memcpy(new_var_str, var_name, name_len);
 	new_var_str[name_len] = '=';
 	ft_memcpy(new_var_str + name_len + 1, value, value_len + 1);
 	add_env_variable(envp_ptr, new_var_str);
-	free(new_var_str); // add_env_variable should make its own copy
+	free(new_var_str);
 }
 
-int ft_cd(char **argv, char **envp)
+int	ft_cd(char **argv, char **envp)
 {
 	char	old_pwd[PATH_MAX];
 	char	new_pwd[PATH_MAX];
@@ -96,15 +87,9 @@ int ft_cd(char **argv, char **envp)
 	if (getcwd(old_pwd, sizeof(old_pwd)) == NULL)
 		return (perror("cd : getcwd error"), 1);
 	if (argv[1] == NULL)
-	{
-		ft_putstr_fd("cd : missing arguments\n", STDERR_FILENO);
-		return (1);
-	}
+		return (ft_putstr_fd("cd : missing arguments\n", STDERR_FILENO), 1);
 	if (argv[2] != NULL)
-	{
-		ft_putstr_fd("cd : too many argumetns\n", STDERR_FILENO);
-		return (1);
-	}
+		return (ft_putstr_fd("cd : too many argumetns\n", STDERR_FILENO), 1);
 	if (chdir(argv[1]) != 0)
 	{
 		ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
@@ -115,11 +100,8 @@ int ft_cd(char **argv, char **envp)
 		return (1);
 	}
 	if (getcwd(new_pwd, sizeof(new_pwd)) == NULL)
-	{
-		perror("pwd");
-		return (1);
-	}
+		return (perror("pwd"), 1);
 	update_env_var(&envp, "OLDPWD", old_pwd);
 	update_env_var(&envp, "PWD", new_pwd);
-	return(0);
+	return (0);
 }

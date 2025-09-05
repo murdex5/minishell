@@ -40,3 +40,13 @@ int	process_signals(struct sigaction *sa)
 	signal(SIGQUIT, SIG_IGN);
 	return (1);
 }
+
+void	save_terminal_state(struct termios *original_state)
+{
+	tcgetattr(STDIN_FILENO, original_state);
+}
+
+void	restore_terminal_state(struct termios *original_state)
+{
+	tcsetattr(STDIN_FILENO, TCSANOW, original_state);
+}

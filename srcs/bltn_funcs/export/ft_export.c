@@ -180,13 +180,10 @@ int	update_envp(char ***envp_ptr, char **argv)
 		if (!add_new_variable(envp_ptr, argv[1]))
 			return (1);
 	}
-	return (0); // Success
+	return (0);
 }
 
 
-
-
-// Your main export function
 int	ft_export(char **argv, char ***envp_ptr)
 {
 	if (argv[1] == NULL)
