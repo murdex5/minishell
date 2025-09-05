@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 22:16:08 by kadferna          #+#    #+#             */
-/*   Updated: 2025/08/21 22:16:11 by kadferna         ###   ########.fr       */
+/*   Updated: 2025/09/05 13:19:14 by anjbaiju         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,11 @@ char	*check_variables(char *str, char ***envp_ptr)
 	return (value);
 }
 
+int	ft_echo(char **argv, char ***envp_ptr)
+{
+	int		i;
+	int		new_line;
+	char	*str;
 	int		j;
 
 	i = 1;
@@ -98,13 +103,6 @@ char	*check_variables(char *str, char ***envp_ptr)
 		new_line = 0;
 		i++;
 	}
-
-int	ft_echo(char **argv, char ***envp_ptr)
-{
-	int		i;
-	int		new_line;
-	char	*str;
-
 	while (argv[i] != NULL)
 	{
 		str = process_arguments(argv[i]);
