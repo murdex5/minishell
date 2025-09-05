@@ -12,133 +12,188 @@
 
 #include "../../../minishell.h"
 
-static int	is_valid_identifier(char *str)
-{
-	int	i;
 
-	if (!str || !*str || ft_isdigit(str[0]))
-		return (0);
+
+char	*get_variable_name(char **argv)
+{
+	char	*variable_name;
+	int		i;
+	int		count;
+
+	if (!argv || !argv[1])
+		return (NULL);
 	i = 0;
-	while (str[i] && str[i] != '=')
+	while (argv[1][i] && argv[1][i] != '=')
+		i++;
+	count = i;
+	variable_name = malloc(sizeof(char) * (count + 1));
+	if (!variable_name)
+		return (NULL);
+	i = 0;
+	while (i < count)
 	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
-			return (0);
+		variable_name[i] = argv[1][i];
 		i++;
 	}
-	return (1);
+	variable_name[count] = '\0';
+	return (variable_name);
 }
 
-static void	print_sorted_env(char **envp)
-{
-	char	**copy;
-	int		i;
-	int		j;
-	char	*temp;
-
-	copy = copy_environment(envp);
-	if (!copy)
-		return ;
-	i = -1;
-	while (copy[++i])
-	{
-		j = i;
-		while (copy[++j])
-		{
-			if (ft_strcmp(copy[i], copy[j]) > 0)
-			{
-				temp = copy[i];
-				copy[i] = copy[j];
-				copy[j] = temp;
-			}
-		}
-		ft_putstr_fd("declare -x ", STDOUT_FILENO);
-		ft_putstr_fd(copy[i], STDOUT_FILENO);
-		ft_putstr_fd("\n", STDOUT_FILENO);
-	}
-	free_environment(copy);
-}
-
-static int	update_existing_var(char ***envp_ptr, char *new_var)
+int	check_exists(char **argv, char **envp)
 {
 	int		i;
-	size_t	name_len;
-	char	*equals_pos;
+	char	*variable_name;
+	size_t	len;
 
-	equals_pos = ft_strchr(new_var, '=');
-	if (!equals_pos)
-		name_len = ft_strlen(new_var);
-	else
-		name_len = equals_pos - new_var;
-	i = -1;
-	while ((*envp_ptr)[++i])
+	variable_name = get_variable_name(argv);
+	if (!variable_name || *variable_name == '\0')
 	{
-		if (ft_strncmp((*envp_ptr)[i], new_var, name_len) == 0
-			&& ((*envp_ptr)[i])[name_len] == '=')
-		{
-			free((*envp_ptr)[i]);
-			(*envp_ptr)[i] = ft_strdup(new_var);
-			if (!(*envp_ptr)[i])
-				return (-1);
-			return (1);
-		}
+		if (variable_name)
+			free(variable_name);
+		return (-1);
 	}
-	return (0);
+	len = ft_strlen(variable_name);
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		if (ft_strncmp(variable_name, envp[i], len) == 0 && (envp[i][len] == '='
+				|| envp[i][len] == '\0'))
+		{
+			free(variable_name);
+			return (i);
+		}
+		i++;
+	}
+	free(variable_name);
+	return (-1);
 }
 
-static int	add_new_var(char ***envp_ptr, char *new_var)
+int	add_new_variable(char ***envp_ptr, const char *new_var_str)
 {
+	char	**new_envp;
 	int		count;
-	char	**new_env;
 	int		i;
 
 	count = 0;
 	while ((*envp_ptr)[count])
 		count++;
-	new_env = malloc(sizeof(char *) * (count + 2));
-	if (!new_env)
-		return (0);
-	i = -1;
-	while (++i < count)
-		new_env[i] = (*envp_ptr)[i];
-	new_env[count] = ft_strdup(new_var);
-	if (!new_env[count])
+	new_envp = malloc((count + 2) * sizeof(char *));
+	if (!new_envp)
 	{
-		free(new_env);
+		perror("minishell: malloc");
+		return (0); // Failure
+	}
+	i = 0;
+	while (i < count)
+	{
+		new_envp[i] = (*envp_ptr)[i];
+		i++;
+	}
+	new_envp[count] = ft_strdup(new_var_str);
+	if (!new_envp[count])
+	{
+		perror("minishell: ft_strdup");
+		free(new_envp);
 		return (0);
 	}
-	new_env[count + 1] = NULL;
+	new_envp[count + 1] = NULL;
 	free(*envp_ptr);
-	*envp_ptr = new_env;
+	*envp_ptr = new_envp;
 	return (1);
 }
 
-int	ft_export(char **argv, char ***envp_ptr)
+int	count_envp(char **envp)
 {
 	int	i;
-	int	ret;
 
-	if (!argv[1])
+	i = 0;
+	while (envp[i] != NULL)
+		i++;
+	return (i);
+}
+
+int	check_args(char *argv)
+{
+	if (argv[0] >= '0' && argv[0] <= '9')
 	{
-		print_sorted_env(*envp_ptr);
+		ft_putstr_fd("export : ", STDERR_FILENO);
+		ft_putstr_fd(argv, STDERR_FILENO);
+		ft_putstr_fd(" is not a valid identifier\n", STDERR_FILENO);
 		return (0);
 	}
-	i = 0;
-	ret = 0;
-	while (argv[++i])
+	return (1);
+}
+
+void	sort_envp(char **copy_envp)
+{
+	int		i;
+	int		sorted;
+	char	*temp;
+
+	if (!copy_envp || !copy_envp[0])
+		return ;
+	sorted = 0;
+	while (!sorted)
 	{
-		if (!is_valid_identifier(argv[i]))
+		sorted = 1;
+		i = 1;
+		while (copy_envp[i])
 		{
-			ft_putstr_fd("export: `", STDERR_FILENO);
-			ft_putstr_fd(argv[i], STDERR_FILENO);
-			ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-			ret = 1;
-			continue;
+			if (ft_strncmp(copy_envp[i], copy_envp[i - 1],
+					ft_strlen(copy_envp[i])) < 0)
+			{
+				temp = copy_envp[i];
+				copy_envp[i] = copy_envp[i - 1];
+				copy_envp[i - 1] = temp;
+				sorted = 0;
+			}
+			i++;
 		}
-		if (update_existing_var(envp_ptr, argv[i]) == -1)
-			return (1);
-		if (!update_existing_var(envp_ptr, argv[i])
-			&& !add_new_var(envp_ptr, argv[i]))
+	}
+}
+
+void	print_envp(char **envp)
+{
+	int	i;
+	i = 0;
+	sort_envp(envp);
+	while (envp[i])
+	{
+		printf("declare -x %s\n", envp[i]);
+		i++;
+	}
+}
+int	update_envp(char ***envp_ptr, char **argv)
+{
+	int	exists_index;
+
+	exists_index = check_exists(argv, *envp_ptr);
+	if (exists_index >= 0)
+	{
+		free((*envp_ptr)[exists_index]);
+		(*envp_ptr)[exists_index] = ft_strdup(argv[1]);
+		if (!(*envp_ptr)[exists_index])
 			return (1);
 	}
-	return (ret);
+	else 
+	{
+		if (!add_new_variable(envp_ptr, argv[1]))
+			return (1);
+	}
+	return (0);
+}
+
+
+int	ft_export(char **argv, char ***envp_ptr)
+{
+	if (argv[1] == NULL)
+	{
+		print_envp(*envp_ptr);
+		return (0);
+	}
+	if (!check_args(argv[1]))
+		return (1);
+	if (update_envp(envp_ptr, argv))
+		return (1);
+	return (0);
 }

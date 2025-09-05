@@ -67,9 +67,11 @@ SRCS        := \
 	$(SRCS_DIR)/closes.c \
 	$(SRCS_DIR)/frees.c \
 	$(SRCS_DIR)/check_bltn.c \
+	$(SRCS_DIR)/bltn_funcs/echo/ft_echo_utils.c \
 	$(SRCS_DIR)/bltn_funcs/echo/ft_echo.c \
 	$(SRCS_DIR)/bltn_funcs/cd/ft_cd.c \
 	$(SRCS_DIR)/bltn_funcs/pwd/ft_pwd.c \
+	$(SRCS_DIR)/bltn_funcs/env/ft_env.c \
 	$(SRCS_DIR)/bltn_funcs/export/ft_export.c \
 	$(SRCS_DIR)/bltn_funcs/exit/ft_exit.c \
 	main.c

@@ -12,24 +12,24 @@
 
 #include "../../minishell.h"
 
-int	execute_builtin(t_command_node *cmd, char ***envp_ptr, t_token *token,
+int	execute_builtin(t_command_node *cmd, char ***envp, t_token *token,
 		char *line)
 {
 	char	*cmd_name;
 
 	cmd_name = cmd->argv[0];
 	if (ft_strncmp(cmd_name, "echo", ft_strlen(cmd_name)) == 0)
-		return (ft_echo(cmd->argv));
+		return (ft_echo(cmd->argv, envp));
 	if (ft_strncmp(cmd_name, "cd", ft_strlen(cmd_name)) == 0)
-		return (ft_cd(cmd->argv, envp_ptr));
+		return (ft_cd(cmd->argv, *envp));
 	if (ft_strncmp(cmd_name, "pwd", ft_strlen(cmd_name)) == 0)
 		return (ft_pwd());
 	if (ft_strncmp(cmd_name, "export", ft_strlen(cmd_name)) == 0)
-		return (ft_export(cmd->argv, envp_ptr));
+		return (ft_export(cmd->argv, envp));
 	// if (ft_strncmp(cmd_name, "unset", ft_strlen(cmd_name)) == 0)
 	// 	return (ft_unset(cmd->argv, envp));
-	// if (ft_strncmp(cmd_name, "env", ft_strlen(cmd_name)) == 0)
-	// 	return (ft_env(envp));
+	if (ft_strncmp(cmd_name, "env", ft_strlen(cmd_name)) == 0)
+		return (ft_env(*envp));
 	if (ft_strncmp(cmd_name, "exit", ft_strlen(cmd_name)) == 0)
 		return (ft_exit_builtin(cmd->argv, token, line));
 	return (0);
