@@ -110,7 +110,7 @@ int						ft_pwd(void);
 /* ft_export */
 int						ft_export(char **argv, char ***envp_ptr);
 // int						ft_unset(char **argv, char **envp);
-// int						ft_env(char **envp);
+int						ft_env(char **envp);
 
 void					save_terminal_state(struct termios *original_state);
 void					restore_terminal_state(struct termios *original_state);
