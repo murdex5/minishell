@@ -22,6 +22,7 @@ int	main(int argc, char **argv, char *envp[])
 	t_ast_node			*pipe;
 	char				**envp_copy;
 	struct termios		original_term;
+	int exit_code;
 
 	(void)argc;
 	(void)argv;
@@ -48,7 +49,7 @@ int	main(int argc, char **argv, char *envp[])
 			pipe = parse(token);
 			if (pipe)
 			{
-				execute_ast_pipeline(pipe, &envp_copy, token, line);
+				exit_code  = execute_ast_pipeline(pipe, &envp_copy, token, line);
 				free_on_exiting_list(token);
 				token = NULL;
 				pipe = NULL;
