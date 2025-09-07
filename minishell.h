@@ -110,9 +110,13 @@ int						ft_cd(char **argv, char **envp);
 int						ft_pwd(void);
 /* ft_export */
 int						ft_export(char **argv, char ***envp_ptr);
-int	check_exists(char **argv, char **envp);
-char	*get_variable_name(char **argv);
+int						check_exists(char **argv, char **envp);
+char					*get_variable_name(char **argv);
+/* FT_UNSET */
+int	count_env_variables(char **envp);
 int						ft_unset(char **argv, char ***envp);
+int						find_variable_index(char **envp, char *var_to_remove);
+char					**allocate_new_envp(int size);
 int						ft_env(char **envp);
 
 void					save_terminal_state(struct termios *original_state);

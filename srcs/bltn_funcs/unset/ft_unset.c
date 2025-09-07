@@ -12,73 +12,62 @@
 
 #include "../../../minishell.h"
 
+int	copy_variables(char **new_envp, char **old_envp, int remove_idx, int count)
+{
+	int	i;
+	int	j;
+
+	j = 0;
+	i = 0;
+	while (i < count)
+	{
+		if (i != remove_idx)
+		{
+			new_envp[j] = old_envp[i];
+			j++;
+		}
+		else
+			free(old_envp[i]);
+		i++;
+	}
+	new_envp[j] = NULL;
+	return (1);
+}
+
 int	remove_variable(char ***envp_ptr, char *var_to_remove)
 {
 	char	**new_envp;
 	int		count;
-	int		old_idx;
-	int		new_idx;
 	int		remove_idx;
 
-	remove_idx = check_on_evnp(var_to_remove, *envp_ptr);
+	count = count_env_variables(*envp_ptr);
+	remove_idx = find_variable_index(*envp_ptr, var_to_remove);
 	if (remove_idx == -1)
 		return (1);
-	count = 0;
-	while ((*envp_ptr)[count])
-		count++;
-	new_envp = malloc(count * sizeof(char *));
+	new_envp = allocate_new_envp(count);
 	if (!new_envp)
-	{
-		perror("minishell: malloc");
-		return (0); // Failure
-	}
-	old_idx = 0;
-	new_idx = 0;
-	while (old_idx < count)
-	{
-		if (old_idx == remove_idx)
-			free((*envp_ptr)[old_idx]);
-		else
-		{
-			new_envp[new_idx] = (*envp_ptr)[old_idx];
-			new_idx++;
-		}
-		old_idx++;
-	}
-	new_envp[new_idx] = NULL;
+		return (0);
+	copy_variables(new_envp, *envp_ptr, remove_idx, count);
 	free(*envp_ptr);
 	*envp_ptr = new_envp;
-	return (1); // Success
-}
-
-int	update_envp_remove(char ***envp_ptr, char **argv)
-{
-	int	exists_index;
-
-	exists_index = check_exists(argv, *envp_ptr);
-	if (exists_index >= 0)
-	{
-		free((*envp_ptr)[exists_index]);
-		(*envp_ptr)[exists_index] = ft_strdup(argv[1]);
-		if (!(*envp_ptr)[exists_index])
-			return (1);
-	}
-	else
-	{
-		if (!remove_variable(envp_ptr, argv[1]))
-			return (1);
-	}
-	return (0);
+	return (1);
 }
 
 int	ft_unset(char **argv, char ***envp)
 {
 	int	i;
 
-	i = check_exists(argv, *envp);
-	if (i < 0)
+	if (!argv[1])
+	{
+		ft_putstr_fd("unset: missing variable name\n", STDERR_FILENO);
 		return (1);
-	if (update_envp_remove(envp, argv))
-		return (1);
+	}
+	i = 1;
+	while (argv[i])
+	{
+		if (!remove_variable(envp, argv[i]))
+			return (1);
+		i++;
+	}
 	return (0);
 }
