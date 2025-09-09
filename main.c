@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 17:32:23 by kadferna          #+#    #+#             */
-/*   Updated: 2025/07/12 17:32:26 by kadferna         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:41:35 by anjbaiju         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,11 @@ int	main(int argc, char **argv, char *envp[])
 		{
 			restore_terminal_state(&original_term);
 			return (ft_exit(line, token), exit_code);
+		}
+		if (!validate_quotes(line))
+		{
+			free(line);
+			continue ;
 		}
 		if (*line)
 		{
