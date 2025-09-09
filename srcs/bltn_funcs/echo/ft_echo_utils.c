@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 12:31:34 by kadferna          #+#    #+#             */
-/*   Updated: 2025/09/05 12:31:36 by kadferna         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:40:56 by anjbaiju         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,29 @@ char	*detect_varaible_name(char *argv)
 	}
 	free_tokens(strs);
 	return (NULL);
+}
+
+int	validate_quotes(const char *str)
+{
+	int	i;
+	int	single_quote;
+	int	double_quote;
+
+	i = 0;
+	single_quote = 0;
+	double_quote = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'' && double_quote == 0)
+			single_quote = !single_quote;
+		else if (str[i] == '"' && single_quote == 0)
+			double_quote = !double_quote;
+		i++;
+	}
+	if (single_quote || double_quote)
+	{
+		write(2, "minishell: syntax error: unmatched quote\n", 41);
+		return (0);
+	}
+	return (1);
 }
