@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../../../minishell.h"
 
 char	*process_arguments(const char *str)
@@ -74,36 +73,57 @@ int	check_on_evnp(char *variable_name, char **envp)
 	return (-1);
 }
 
-static char add_exit(char *str, int exit_code)
+static char	*add_exit(char *str, char *search, char *replace)
 {
-	int i;
+	if (!str || !search || !replace) {
+        return NULL;
+    }
 
-	i = 0;
-	char *temp;
-	char *parsed;
-	while (str[i])
-	{
-		if (str[i] == '$' && (str[i+1] && str[i] == '?'))
-			break ;
-		i++;
-	}
-	temp = malloc(sizeof(char) * i+1);
-	int count;
-	count =0;
-	while (count < i)
-	{
-		str[count] = temp[count];
-		count++;
-	}
-	temp[i] = '\0';
-	parsed = ft_strjoin(temp, ft_itoa(exit_code));
-	free(temp);
-	i++;
-	count = 0;
-	while (str[i])
-	{
-		
-	}
+    size_t search_len = strlen(search);
+    // If search string is empty, just duplicate the original string.
+    if (search_len == 0) {
+        return strdup(str);
+    }
+    
+    size_t replace_len = strlen(replace);
+
+    // First, calculate the required size for the new string.
+    int count = 0;
+    const char *p = str;
+    while ((p = strstr(p, search))) {
+        count++;
+        p += search_len;
+    }
+    
+    size_t new_len = strlen(str) + count * (replace_len - search_len);
+    char *new_str = malloc(new_len + 1);
+    if (!new_str) {
+        return NULL;
+    }
+
+    // Now, build the new string.
+    char *current_pos = new_str;
+    const char *old_pos = str;
+    const char *match = NULL;
+
+    while ((match = strstr(old_pos, search))) {
+        // Copy the segment before the match.
+        size_t len_before = match - old_pos;
+        memcpy(current_pos, old_pos, len_before);
+        current_pos += len_before;
+
+        // Copy the replacement string.
+        memcpy(current_pos, replace, replace_len);
+        current_pos += replace_len;
+
+        // Move the old position pointer past the search term.
+        old_pos = match + search_len;
+    }
+
+    // Copy the remainder of the string after the last match.
+    strcpy(current_pos, old_pos);
+
+    return new_str;
 }
 
 static char add_exit(char *str, int exit_code)
@@ -128,8 +148,8 @@ char	*check_variables(char *str, char ***envp_ptr, int exit_code)
 	char	*value;
 	int		i;
 
-	// if (ft_strnstr(str, "$?", ft_strlen("$?")))
-
+	if (ft_strnstr(str, "$?", ft_strlen("$?")))
+		str = add_exit(str, "$?", ft_itoa(exit_code));
 	varaible_name = detect_varaible_name(str);
 	if (!varaible_name)
 		return (str);
@@ -182,5 +202,5 @@ int	ft_echo(char **argv, char ***envp_ptr, int exit_code)
 	}
 	if (new_line)
 		write(STDOUT_FILENO, "\n", 1);
-	return (exit_code);
+	return (0);
 }
