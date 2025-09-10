@@ -192,7 +192,8 @@ int	ft_echo(char **argv, char ***envp_ptr, int exit_code)
 	while (argv[i] != NULL)
 	{
 		str = process_arguments(argv[i]);
-		str = check_variables(str, envp_ptr, exit_code);
+		if (!is_single_quoted(argv[i]))
+			str = check_variables(str, envp_ptr, exit_code);
 		if (str)
 			write(STDOUT_FILENO, str, ft_strlen(str));
 		if (argv[i + 1])
