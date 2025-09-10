@@ -67,11 +67,29 @@ int	check_on_evnp(char *variable_name, char **envp)
 	return (-1);
 }
 
-char	*check_variables(char *str, char ***envp_ptr)
+static char add_exit(char *str, int exit_code)
+{
+	char *exit_val;
+	char *temp;
+	size_t exit_len;
+	size_t new_len;
+
+	exit_val = ft_itoa(exit_code);
+	len = ft_strlen(exit_val);
+	new_len = ft_strlen(str) + len;
+	temp = ft_strdup(str);
+	if (!temp)
+		return (NULL);
+	str = ft_realloc(str, ft_strlen(str), new_len);
+}
+
+char	*check_variables(char *str, char ***envp_ptr, int exit_code)
 {
 	char	*varaible_name;
 	char	*value;
 	int		i;
+
+	if (ft_strnstr(str, "$?", ft_strlen("$?")))
 
 	varaible_name = detect_varaible_name(str);
 	if (!varaible_name)
@@ -104,7 +122,7 @@ static int	process_n_flags(char **argv, int *i)
 	return (new_line);
 }
 
-int	ft_echo(char **argv, char ***envp_ptr)
+int	ft_echo(char **argv, char ***envp_ptr, int exit_code)
 {
 	int		i;
 	int		new_line;
@@ -115,7 +133,7 @@ int	ft_echo(char **argv, char ***envp_ptr)
 	while (argv[i] != NULL)
 	{
 		str = process_arguments(argv[i]);
-		str = check_variables(str, envp_ptr);
+		str = check_variables(str, envp_ptr, exit_code);
 		if (str)
 			write(STDOUT_FILENO, str, ft_strlen(str));
 		if (argv[i + 1])
