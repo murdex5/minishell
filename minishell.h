@@ -114,7 +114,7 @@ int						ft_export(char **argv, char ***envp_ptr);
 int						check_exists(char **argv, char **envp);
 char					*get_variable_name(char **argv);
 /* FT_UNSET */
-int	count_env_variables(char **envp);
+int						count_env_variables(char **envp);
 int						ft_unset(char **argv, char ***envp);
 int						find_variable_index(char **envp, char *var_to_remove);
 char					**allocate_new_envp(int size);
@@ -180,4 +180,6 @@ void					ft_exit(char *r1, t_token *token);
 void					*ft_realloc(void *a, size_t old_size, size_t new_size);
 void					signal_handler(int sig);
 int						process_signals(struct sigaction *sa);
+int						is_single_quoted(const char *str);
+
 #endif

@@ -49,6 +49,11 @@ int	main(int argc, char **argv, char *envp[])
 			free(line);
 			continue ;
 		}
+		if (!validate_quotes(line))
+		{
+			free(line);
+			continue ;
+		}
 		if (*line)
 		{
 			token = NULL;
