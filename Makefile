@@ -106,7 +106,6 @@ $(NAME): $(OBJS) $(LIBFT_LIB)
 clean:
 	@echo "$(YELLOW)♻  Cleaning object files...$(RESET)"
 	@rm -f $(OBJS)
-	@$(MAKE) -C $(LIBFT_PATH) clean --no-print-directory
 
 fclean: clean
 	@echo "$(RED)🧹 Deep cleaning...$(RESET)"

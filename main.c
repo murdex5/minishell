@@ -6,7 +6,7 @@
 /*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 17:32:23 by kadferna          #+#    #+#             */
-/*   Updated: 2025/09/10 14:47:37 by anjbaiju         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:41:35 by anjbaiju         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@ int	main(int argc, char **argv, char *envp[])
 	t_ast_node			*pipe;
 	char				**envp_copy;
 	struct termios		original_term;
-	int exit_code;
+	int					exit_code;
+	int temp_exit;
 
+	exit_code = 0;
 	(void)argc;
 	(void)argv;
 	save_terminal_state(&original_term);
@@ -40,7 +42,12 @@ int	main(int argc, char **argv, char *envp[])
 		if (line == NULL)
 		{
 			restore_terminal_state(&original_term);
-			return (ft_exit(line, token), 0);
+			return (ft_exit(line, token), exit_code);
+		}
+		if (!validate_quotes(line))
+		{
+			free(line);
+			continue ;
 		}
 		if (!validate_quotes(line))
 		{
@@ -49,20 +56,21 @@ int	main(int argc, char **argv, char *envp[])
 		}
 		if (*line)
 		{
+			token = NULL;
+			pipe = NULL;
 			add_history(line);
 			token = init_tokens(line);
 			pipe = parse(token);
 			if (pipe)
 			{
-				exit_code  = execute_ast_pipeline(pipe, &envp_copy, token, line);
+				temp_exit = execute_ast_pipeline(pipe, &envp_copy, exit_code);
+				exit_code = temp_exit;
 				free_on_exiting_list(token);
-				token = NULL;
-				pipe = NULL;
 			}
 		}
 		free(line);
 	}
 	restore_terminal_state(&original_term);
 	free_environment(envp_copy);
-	return (0);
+	return (exit_code);
 }
