@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kadferna <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/07/12 17:32:55 by kadferna          #+#    #+#              #
-#    Updated: 2025/07/12 17:32:59 by kadferna         ###   ########.fr        #
+#    Updated: 2025/09/08 13:31:44 by anjbaiju         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -115,4 +115,7 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re libft
+valgrind: $(NAME)
+	@valgrind --leak-check=full --show-leak-kinds=all --suppressions=supp.supp ./$(NAME)
+
+.PHONY: all clean fclean re libft valgrind
