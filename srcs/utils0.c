@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils0.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 17:32:34 by kadferna          #+#    #+#             */
-/*   Updated: 2025/07/12 17:32:35 by kadferna         ###   ########.fr       */
+/*   Updated: 2025/09/10 14:41:48 by anjbaiju         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,16 @@ void	ft_exit(char *r1, t_token *token)
 	if (token)
 		free_on_exiting_list(token);
 	free_r1(r1);
+}
+
+int	is_single_quoted(const char *str)
+{
+	int	i;
+
+	i = 0;
+	if (str[i] == '\'' && str[strlen(str) - 1] == '\'')
+		return (1);
+	return (0);
 }
 
 void	*ft_realloc(void *a, size_t old_size, size_t new_size)

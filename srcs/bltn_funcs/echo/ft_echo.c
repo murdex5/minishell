@@ -6,10 +6,9 @@
 /*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 22:16:08 by kadferna          #+#    #+#             */
-/*   Updated: 2025/09/10 13:37:07 by anjbaiju         ###   ########.fr       */
+/*   Updated: 2025/09/10 14:42:21 by anjbaiju         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../../../minishell.h"
 
@@ -122,7 +121,8 @@ int	ft_echo(char **argv, char ***envp_ptr)
 	while (argv[i] != NULL)
 	{
 		str = process_arguments(argv[i]);
-		str = check_variables(str, envp_ptr);
+		if (!is_single_quoted(argv[i]))
+			str = check_variables(str, envp_ptr);
 		if (str)
 			write(STDOUT_FILENO, str, ft_strlen(str));
 		if (argv[i + 1])
