@@ -106,7 +106,23 @@ static char add_exit(char *str, int exit_code)
 	}
 }
 
-char	*check_variables(char *str, char ***envp_ptr)
+static char add_exit(char *str, int exit_code)
+{
+	char *exit_val;
+	char *temp;
+	size_t exit_len;
+	size_t new_len;
+
+	exit_val = ft_itoa(exit_code);
+	len = ft_strlen(exit_val);
+	new_len = ft_strlen(str) + len;
+	temp = ft_strdup(str);
+	if (!temp)
+		return (NULL);
+	str = ft_realloc(str, ft_strlen(str), new_len);
+}
+
+char	*check_variables(char *str, char ***envp_ptr, int exit_code)
 {
 	char	*varaible_name;
 	char	*value;
@@ -156,7 +172,7 @@ int	ft_echo(char **argv, char ***envp_ptr, int exit_code)
 	while (argv[i] != NULL)
 	{
 		str = process_arguments(argv[i]);
-		str = check_variables(str, envp_ptr);
+		str = check_variables(str, envp_ptr, exit_code);
 		if (str)
 			write(STDOUT_FILENO, str, ft_strlen(str));
 		if (argv[i + 1])
