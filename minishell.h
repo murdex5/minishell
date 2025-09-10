@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 17:32:47 by kadferna          #+#    #+#             */
-/*   Updated: 2025/07/12 17:32:50 by kadferna         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:39:54 by anjbaiju         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ int						check_on_evnp(char *variable_name, char **envp);
 char					*get_variable_value(int index, char **envp_ptr);
 char					*modify_variable(char *str);
 char					*detect_varaible_name(char *argv);
+int						validate_quotes(const char *str);
 /* ft_cd */
 int						ft_cd(char **argv, char **envp);
 /* ft_pwd */

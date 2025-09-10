@@ -6,34 +6,41 @@
 /*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 22:16:08 by kadferna          #+#    #+#             */
-/*   Updated: 2025/09/05 13:54:51 by anjbaiju         ###   ########.fr       */
+/*   Updated: 2025/09/10 13:37:07 by anjbaiju         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "../../../minishell.h"
 
-char	*process_arguments(char *str)
+char	*process_arguments(const char *str)
 {
 	char	*processed_str;
 	int		i;
 	int		j;
+	char	quote;
 
-	j = 0;
 	i = 0;
+	j = 0;
+	quote = 0;
 	processed_str = malloc(sizeof(char) * (ft_strlen(str) + 1));
 	if (!processed_str)
 		return (NULL);
-	while (str[i] != '\0')
+	while (str[i])
 	{
-		if ((str[i] == '"' || str[i] == 39) && (i == 0
-				|| i == (int)ft_strlen(str) - 1))
+		if ((str[i] == '\'' || str[i] == '"'))
 		{
+			if (!quote)
+				quote = str[i];
+			else if (quote == str[i])
+				quote = 0;
+			else
+				processed_str[j++] = str[i];
 			i++;
 			continue ;
 		}
-		processed_str[j] = str[i];
-		j++;
-		i++;
+		else
+			processed_str[j++] = str[i++];
 	}
 	processed_str[j] = '\0';
 	return (processed_str);

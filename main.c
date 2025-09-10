@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 17:32:23 by kadferna          #+#    #+#             */
-/*   Updated: 2025/07/12 17:32:26 by kadferna         ###   ########.fr       */
+/*   Updated: 2025/09/09 15:41:35 by anjbaiju         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,15 @@ int	main(int argc, char **argv, char *envp[])
 		if (g_signal_received)
 			g_signal_received = 0;
 		line = readline("minishell: ");
-		if (line == NULL) 
+		if (line == NULL)
 		{
 			restore_terminal_state(&original_term);
 			return (ft_exit(line, token), 0);
+		}
+		if (!validate_quotes(line))
+		{
+			free(line);
+			continue ;
 		}
 		if (*line)
 		{
