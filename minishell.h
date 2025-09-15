@@ -128,7 +128,10 @@ int						ft_strcmp(const char *s1, const char *s2);
 
 int						ft_exit_builtin(void);
 
-int						execute_builtin(t_command_node *cmd, char ***envp, int exit_status);
+char					*ft_strcpy(char *dest, const char *src);
+char					*ft_strstr(const char *haystack, const char *needle);
+int						execute_builtin(t_command_node *cmd, char ***envp,
+							int exit_status);
 char					**copy_environment(char *envp[]);
 void					free_environment(char **msh_envp);
 int						is_builtin(t_command_node *node);
@@ -145,15 +148,19 @@ int						perror_ret(char *msg, int i);
 void					free_paths(char **paths);
 int						close_exit(int fd1, int fd2, char **envp,
 							t_ast_node *node);
-int						exec_ast(t_ast_node *node, char ***envp, int exit_status);
-int						exec_pipe_node(t_pipe_node *pipe_node, char ***envp, int exit_status);
-int						exec_simple_command(t_command_node *cmd, char ***envp, int exit_status);
+int						exec_ast(t_ast_node *node, char ***envp,
+							int exit_status);
+int						exec_pipe_node(t_pipe_node *pipe_node, char ***envp,
+							int exit_status);
+int						exec_simple_command(t_command_node *cmd, char ***envp,
+							int exit_status);
 void					handle_redirections(t_redirect *redir_list);
 char					*resolve_command_path(const char *cmd_name,
 							char **envp);
 char					**get_path(char *env[]);
 t_ast_node				*parse(t_token *token);
-int						execute_ast_pipeline(t_ast_node *node, char ***envp_ptr, int exit_status);
+int						execute_ast_pipeline(t_ast_node *node, char ***envp_ptr,
+							int exit_status);
 int						put_content(t_list *tmp, char **array, int *i);
 t_redirect_type			get_redir_type(t_tokentype token_type);
 void					free_ast(t_ast_node *node);

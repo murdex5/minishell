@@ -103,3 +103,41 @@ int	ft_strcmp(const char *s1, const char *s2)
 		i++;
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
+
+char *ft_strcpy(char *dest, const char *src)
+{
+    int i;
+
+    i = 0;
+    while (src[i] != '\0')
+    {
+        dest[i] = src[i];
+        i++;
+    }
+    dest[i] = '\0';
+    return (dest);
+}
+
+char *ft_strstr(const char *haystack, const char *needle)
+{
+    size_t i;
+    size_t j;
+
+    if (*needle == '\0')
+        return ((char *)haystack);
+    i = 0;
+    while (haystack[i] != '\0')
+    {
+        j = 0;
+        while (haystack[i + j] != '\0' && needle[j] != '\0' && haystack[i + j] == needle[j])
+        {
+            j++;
+        }
+        if (needle[j] == '\0')
+        {
+            return ((char *)&haystack[i]);
+        }
+        i++;
+    }
+    return (NULL);
+}
