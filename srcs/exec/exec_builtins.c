@@ -12,13 +12,13 @@
 
 #include "../../minishell.h"
 
-int	execute_builtin(t_command_node *cmd, char ***envp, int exit_code)
+int	execute_builtin(t_command_node *cmd, char ***envp, t_ast_node *pipe)
 {
 	char	*cmd_name;
 
 	cmd_name = cmd->argv[0];
 	if (ft_strncmp(cmd_name, "echo", ft_strlen(cmd_name)) == 0)
-		return (ft_echo(cmd->argv, envp, exit_code));
+		return (ft_echo(cmd->argv));
 	if (ft_strncmp(cmd_name, "cd", ft_strlen(cmd_name)) == 0)
 		return (ft_cd(cmd->argv, *envp));
 	if (ft_strncmp(cmd_name, "pwd", ft_strlen(cmd_name)) == 0)
@@ -30,6 +30,6 @@ int	execute_builtin(t_command_node *cmd, char ***envp, int exit_code)
 	if (ft_strncmp(cmd_name, "env", ft_strlen(cmd_name)) == 0)
 		return (ft_env(*envp));
 	if (ft_strncmp(cmd_name, "exit", ft_strlen(cmd_name)) == 0)
-		return (ft_exit_builtin());
+		return (ft_exit_builtin(*envp, pipe));
 	return (0);
 }

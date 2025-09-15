@@ -28,11 +28,13 @@ int	ft_isdigit_str(const char *str)
 	return (1);
 }
 
-int	ft_exit_builtin(void)
+int	ft_exit_builtin(char **envp, t_ast_node *pipe)
 {
 	int	exit_code;
 
 	exit_code = 0;
+	free_environment(envp); 
+	free_ast(pipe);
 	exit(exit_code);
 	return (exit_code);
 }

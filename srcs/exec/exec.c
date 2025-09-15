@@ -12,30 +12,30 @@
 
 #include "../../minishell.h"
 
-int	execute_ast_pipeline(t_ast_node *node, char ***envp_ptr, int exit_code)
+int	execute_ast_pipeline(t_ast_node *node, char ***envp_ptr)
 {
 	int	result;
 
 	if (!node)
 		return (0);
-	result = exec_ast(node, envp_ptr, exit_code);
+	result = exec_ast(node, envp_ptr);
 	free_ast(node);
 	return (result);
 }
 
-int	exec_ast(t_ast_node *node, char ***envp, int exit_code)
+int	exec_ast(t_ast_node *node, char ***envp)
 {
 	if (node->type == NODE_COMMAND)
 	{
-		return (exec_simple_command((t_command_node *)node, envp, exit_code));
+		return (exec_simple_command((t_command_node *)node, envp, node));
 	}
 	if (node->type == NODE_PIPE)
-		return (exec_pipe_node((t_pipe_node *)node, envp, exit_code));
+		return (exec_pipe_node((t_pipe_node *)node, envp));
 	printf_err("minishell: Unrecognized node type", node->type);
 	return (127);
 }
 
-int	exec_simple_command(t_command_node *cmd, char ***envp, int exit_code)
+int	exec_simple_command(t_command_node *cmd, char ***envp,t_ast_node *node)
 {
 	pid_t	pid;
 	int		status;
@@ -60,7 +60,7 @@ int	exec_simple_command(t_command_node *cmd, char ***envp, int exit_code)
 			close(stdin_backup);
 			return (1);
 		}
-		result = execute_builtin(cmd, envp, exit_code);
+		result = execute_builtin(cmd, envp, node);
 		dup2(stdout_backup, STDOUT_FILENO);
 		dup2(stdin_backup, STDIN_FILENO);
 		close(stdout_backup);
@@ -90,7 +90,7 @@ int	exec_simple_command(t_command_node *cmd, char ***envp, int exit_code)
 	return (128 + WTERMSIG(status));
 }
 
-int	exec_pipe_node(t_pipe_node *pipe_node, char ***envp, int exit_code)
+int	exec_pipe_node(t_pipe_node *pipe_node, char ***envp)
 {
 	int		fd[2];
 	pid_t	pid_left;
@@ -103,12 +103,12 @@ int	exec_pipe_node(t_pipe_node *pipe_node, char ***envp, int exit_code)
 	if (pid_left == -1)
 		return (perror_ret("fork", 1));
 	if (pid_left == 0)
-		handle_left_child(fd, pipe_node->left, *envp, exit_code);
+		handle_left_child(fd, pipe_node->left, *envp);
 	pid_right = fork();
 	if (pid_right == -1)
 		return (perror_ret("fork", 1));
 	if (pid_right == 0)
-		handle_right_child(fd, pipe_node->right, *envp, exit_code);
+		handle_right_child(fd, pipe_node->right, *envp);
 	close2_fd(fd[0], fd[1]);
 	waitpid(pid_left, NULL, 0);
 	waitpid(pid_right, &status_right, 0);

@@ -67,4 +67,5 @@ void	expand_token_variables(t_token *tokens, int exit, char ***envp_ptr)
 		}
 		current = current->next;
 	}
+
 }

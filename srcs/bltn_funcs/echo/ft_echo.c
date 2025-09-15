@@ -166,7 +166,7 @@ static int	process_n_flags(char **argv, int *i)
 	return (new_line);
 }
 
-int	ft_echo(char **argv, char ***envp_ptr, int exit_code)
+int	ft_echo(char **argv)
 {
 	int		i;
 	int		new_line;
@@ -176,9 +176,7 @@ int	ft_echo(char **argv, char ***envp_ptr, int exit_code)
 	new_line = process_n_flags(argv, &i);
 	while (argv[i] != NULL)
 	{
-		str = process_arguments(argv[i]);
-		if (!is_single_quoted(argv[i]))
-			str = expand_and_replace_vars(str, envp_ptr, exit_code);
+		str = process_arguments(argv[i]);;
 		if (str)
 		{
 			write(STDOUT_FILENO, str, ft_strlen(str));
