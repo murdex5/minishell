@@ -98,6 +98,8 @@ typedef struct s_token
 }						t_token;
 
 /* ** BUILT IN FUNCS ** */
+/*  ft_expand_vars */
+void	expand_token_variables(t_token *tokens, int exit, char ***envp_ptr);
 /* ft_echo */
 int						ft_echo(char **argv, char ***envp_ptr, int exit_status);
 int						check_on_evnp(char *variable_name, char **envp);
@@ -105,6 +107,8 @@ char					*get_variable_value(int index, char **envp_ptr);
 char					*modify_variable(char *str);
 char					*detect_varaible_name(char *argv);
 int						validate_quotes(const char *str);
+char	*process_arguments(const char *str);
+char	*expand_and_replace_vars(char *str, char ***envp_ptr, int exit_code);
 /* ft_cd */
 int						ft_cd(char **argv, char **envp);
 /* ft_pwd */

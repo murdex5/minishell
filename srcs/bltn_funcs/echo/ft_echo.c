@@ -78,11 +78,15 @@ char	*expand_and_replace_vars(char *str, char ***envp_ptr, int exit_code)
 	char	*final_str;
 	int		i;
 	int		j;
-	
-	result = ft_calloc(ft_strlen(str) * 2 + 20, sizeof(char)); // Increased buffer slightly
+	char	*exit_str;
+	char	*pid_str;
+	char	*var_name;
+	int		env_index;
+	char	*var_value;
+
+	result = ft_calloc(ft_strlen(str) * 2 + 20, sizeof(char));
 	if (!result)
 		return (str);
-
 	i = 0;
 	j = 0;
 	while (str[i])
@@ -91,39 +95,43 @@ char	*expand_and_replace_vars(char *str, char ***envp_ptr, int exit_code)
 		{
 			if (str[i + 1] == '?')
 			{
-				char *exit_str = ft_itoa(exit_code);
-				ft_strlcat(result, exit_str, ft_strlen(result) + ft_strlen(exit_str) + 1);
+				exit_str = ft_itoa(exit_code);
+				ft_strlcat(result, exit_str, ft_strlen(result)
+					+ ft_strlen(exit_str) + 1);
 				j += ft_strlen(exit_str);
 				free(exit_str);
 				i += 2;
 			}
-			else if (str[i + 1] == '$') 
+			else if (str[i + 1] == '$')
 			{
-				char *pid_str = ft_itoa(getpid()); // getpid() gives the process ID
-				ft_strlcat(result, pid_str, ft_strlen(result) + ft_strlen(pid_str) + 1);
+				pid_str = ft_itoa(getpid());
+				ft_strlcat(result, pid_str, ft_strlen(result)
+					+ ft_strlen(pid_str) + 1);
 				j += ft_strlen(pid_str);
 				free(pid_str);
-				i += 2; 
+				i += 2;
 			}
 			else
 			{
-				char *var_name = detect_varaible_name(&str[i + 1]);
+				var_name = detect_varaible_name(&str[i]);
 				if (var_name && ft_strlen(var_name) > 0)
 				{
-					int env_index = check_on_evnp(ft_strdup(var_name), *envp_ptr);
+					env_index = check_on_evnp(ft_strdup(var_name), *envp_ptr);
 					if (env_index >= 0)
 					{
-						char* var_value = get_variable_value(env_index, *envp_ptr);
-						ft_strlcat(result, var_value, ft_strlen(result) + ft_strlen(var_value) + 1);
+						var_value = get_variable_value(env_index, *envp_ptr);
+						ft_strlcat(result, var_value, ft_strlen(result)
+							+ ft_strlen(var_value) + 1);
 						j += ft_strlen(var_value);
 					}
 					i += ft_strlen(var_name) + 1;
 					free(var_name);
 				}
-				else 
+				else
 				{
 					result[j++] = str[i++];
-					if(var_name) free(var_name);
+					if (var_name)
+						free(var_name);
 				}
 			}
 		}
@@ -135,10 +143,8 @@ char	*expand_and_replace_vars(char *str, char ***envp_ptr, int exit_code)
 	result[j] = '\0';
 	final_str = ft_strdup(result);
 	free(result);
-	free(str);
 	return (final_str);
 }
-
 
 static int	process_n_flags(char **argv, int *i)
 {

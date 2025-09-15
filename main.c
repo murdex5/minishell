@@ -60,6 +60,7 @@ int	main(int argc, char **argv, char *envp[])
 			pipe = NULL;
 			add_history(line);
 			token = init_tokens(line);
+			expand_token_variables(token, exit_code, &envp_copy);
 			pipe = parse(token);
 			if (pipe)
 			{
