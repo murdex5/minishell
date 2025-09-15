@@ -75,6 +75,7 @@ SRCS        := \
 	$(SRCS_DIR)/bltn_funcs/unset/ft_unset_utils.c \
 	$(SRCS_DIR)/bltn_funcs/unset/ft_unset.c \
 	$(SRCS_DIR)/bltn_funcs/export/ft_export.c \
+	$(SRCS_DIR)/bltn_funcs/expand_vars/ft_expand_vars.c \
 	$(SRCS_DIR)/bltn_funcs/exit/ft_exit.c \
 	main.c
 

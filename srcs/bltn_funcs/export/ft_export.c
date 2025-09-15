@@ -81,7 +81,7 @@ int	add_new_variable(char ***envp_ptr, const char *new_var_str)
 	if (!new_envp)
 	{
 		perror("minishell: malloc");
-		return (0); // Failure
+		return (0);
 	}
 	i = 0;
 	while (i < count)
