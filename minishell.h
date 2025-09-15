@@ -132,6 +132,7 @@ int						ft_strcmp(const char *s1, const char *s2);
 
 int						ft_exit_builtin(void);
 
+void	free_token(t_token *token);
 char					*ft_strcpy(char *dest, const char *src);
 char					*ft_strstr(const char *haystack, const char *needle);
 int						execute_builtin(t_command_node *cmd, char ***envp,
@@ -187,7 +188,7 @@ void					free_tokens(char **tokens);
 char					**construct_tokens(char *line);
 void					free_on_exiting_list(t_token *tokens);
 void					free_r1(char *r1);
-void					ft_exit(char *r1, t_token *token);
+void					ft_exit(char *r1, t_token *token, char **envp_ptr, t_ast_node *pipe);
 void					*ft_realloc(void *a, size_t old_size, size_t new_size);
 void					signal_handler(int sig);
 int						process_signals(struct sigaction *sa);

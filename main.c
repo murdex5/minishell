@@ -42,12 +42,7 @@ int	main(int argc, char **argv, char *envp[])
 		if (line == NULL)
 		{
 			restore_terminal_state(&original_term);
-			return (ft_exit(line, token), exit_code);
-		}
-		if (!validate_quotes(line))
-		{
-			free(line);
-			continue ;
+			return (ft_exit(line, token, envp_copy, pipe), exit_code);
 		}
 		if (!validate_quotes(line))
 		{

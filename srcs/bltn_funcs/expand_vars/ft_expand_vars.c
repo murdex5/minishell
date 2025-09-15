@@ -36,6 +36,8 @@ char	*expand_and_process_arguemetns(char *curr_str, char ***envp_ptr,
 	if (!temp_str)
 		return (NULL);
 	mod_str = expand_and_replace_vars(temp_str, envp_ptr, exit);
+	if (temp_str)
+		free(temp_str);
 	return (mod_str);
 }
 
