@@ -29,6 +29,22 @@ int	free_on_error(char **result, int word_count)
 	return (0);
 }
 
+void	free_token(t_token *token)
+{
+	t_token	*current;
+	t_token	*next;
+
+	current = token;
+	while (current != NULL)
+	{
+		next = current->next;
+		if (current->value != NULL)
+			free(current->value);
+		free(current);
+		current = next;
+	}
+}
+
 void	free_tokens(char **tokens)
 {
 	int	i;

@@ -12,11 +12,15 @@
 
 #include "../minishell.h"
 
-void	ft_exit(char *r1, t_token *token)
+void	ft_exit(char *r1, t_token *token, char **envp_ptr, t_ast_node *pipe)
 {
 	printf("exit\n");
+	if (*envp_ptr || envp_ptr)
+		free_environment(envp_ptr);
 	if (token)
-		free_on_exiting_list(token);
+		free_token(token);
+	if (pipe)
+		free_ast(pipe);
 	free_r1(r1);
 }
 

@@ -12,6 +12,21 @@
 
 #include "../../../minishell.h"
 
+static int	append_str(char *dest, int start_index, const char *src)
+{
+	int	k;
+
+	k = 0;
+	if (!src)
+		return (0);
+	while (src[k])
+	{
+		dest[start_index + k] = src[k];
+		k++;
+	}
+	return (k);
+}
+
 char	*process_arguments(const char *str)
 {
 	char	*processed_str;
@@ -49,65 +64,59 @@ int	check_on_evnp(char *variable_name, char **envp)
 {
 	int		i;
 	size_t	len;
+	char	*modified_name;
 
 	if (!variable_name || *variable_name == '\0')
-	{
-		if (variable_name)
-			free(variable_name);
 		return (-1);
-	}
-	variable_name = modify_variable(variable_name);
-	len = ft_strlen(variable_name);
+	modified_name = ft_strdup(variable_name);
+	len = ft_strlen(modified_name);
 	i = 0;
 	while (envp[i] != NULL)
 	{
-		if (ft_strncmp(variable_name, envp[i], len) == 0 && (envp[i][len] == '='
+		if (ft_strncmp(modified_name, envp[i], len) == 0 && (envp[i][len] == '='
 				|| envp[i][len] == '\0'))
 		{
-			free(variable_name);
+			free(modified_name);
 			return (i);
 		}
 		i++;
 	}
-	free(variable_name);
+	free(modified_name);
 	return (-1);
 }
+
 char	*expand_and_replace_vars(char *str, char ***envp_ptr, int exit_code)
 {
 	char	*result;
 	char	*final_str;
 	int		i;
 	int		j;
-	char	*exit_str;
-	char	*pid_str;
 	char	*var_name;
 	int		env_index;
+	char	*exit_str;
+	char	*pid_str;
 	char	*var_value;
 
-	result = ft_calloc(ft_strlen(str) * 2 + 20, sizeof(char));
+	result = ft_calloc(ft_strlen(str) * 4 + 20, sizeof(char));
 	if (!result)
-		return (str);
+		return (ft_strdup(str));
 	i = 0;
 	j = 0;
 	while (str[i])
 	{
-		if (str[i] == '$')
+		if (str[i] == '$' && str[i + 1])
 		{
 			if (str[i + 1] == '?')
 			{
 				exit_str = ft_itoa(exit_code);
-				ft_strlcat(result, exit_str, ft_strlen(result)
-					+ ft_strlen(exit_str) + 1);
-				j += ft_strlen(exit_str);
+				j += append_str(result, j, exit_str);
 				free(exit_str);
 				i += 2;
 			}
 			else if (str[i + 1] == '$')
 			{
 				pid_str = ft_itoa(getpid());
-				ft_strlcat(result, pid_str, ft_strlen(result)
-					+ ft_strlen(pid_str) + 1);
-				j += ft_strlen(pid_str);
+				j += append_str(result, j, pid_str);
 				free(pid_str);
 				i += 2;
 			}
@@ -116,15 +125,14 @@ char	*expand_and_replace_vars(char *str, char ***envp_ptr, int exit_code)
 				var_name = detect_varaible_name(&str[i]);
 				if (var_name && ft_strlen(var_name) > 0)
 				{
-					env_index = check_on_evnp(ft_strdup(var_name), *envp_ptr);
+					env_index = check_on_evnp(var_name, *envp_ptr);
 					if (env_index >= 0)
 					{
 						var_value = get_variable_value(env_index, *envp_ptr);
-						ft_strlcat(result, var_value, ft_strlen(result)
-							+ ft_strlen(var_value) + 1);
-						j += ft_strlen(var_value);
+						j += append_str(result, j, var_value);
+						free(var_value);
 					}
-					i += ft_strlen(var_name) + 1;
+					i += ft_strlen(var_name) + 1; // +1 for the '$'
 					free(var_name);
 				}
 				else
@@ -166,7 +174,7 @@ static int	process_n_flags(char **argv, int *i)
 	return (new_line);
 }
 
-int	ft_echo(char **argv, char ***envp_ptr, int exit_code)
+int	ft_echo(char **argv)
 {
 	int		i;
 	int		new_line;
@@ -177,8 +185,7 @@ int	ft_echo(char **argv, char ***envp_ptr, int exit_code)
 	while (argv[i] != NULL)
 	{
 		str = process_arguments(argv[i]);
-		if (!is_single_quoted(argv[i]))
-			str = expand_and_replace_vars(str, envp_ptr, exit_code);
+		;
 		if (str)
 		{
 			write(STDOUT_FILENO, str, ft_strlen(str));
