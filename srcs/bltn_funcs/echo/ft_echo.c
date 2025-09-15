@@ -49,27 +49,28 @@ int	check_on_evnp(char *variable_name, char **envp)
 {
 	int		i;
 	size_t	len;
+	char	*modified_name;
 
 	if (!variable_name || *variable_name == '\0')
 	{
-		if (variable_name)
-			free(variable_name);
 		return (-1);
 	}
-	variable_name = modify_variable(variable_name);
-	len = ft_strlen(variable_name);
+	modified_name = modify_variable(variable_name);
+	if (!modified_name)
+		return (-1);
+	len = ft_strlen(modified_name);
 	i = 0;
 	while (envp[i] != NULL)
 	{
-		if (ft_strncmp(variable_name, envp[i], len) == 0 && (envp[i][len] == '='
+		if (ft_strncmp(modified_name, envp[i], len) == 0 && (envp[i][len] == '='
 				|| envp[i][len] == '\0'))
 		{
-			free(variable_name);
+			free(modified_name);
 			return (i);
 		}
 		i++;
 	}
-	free(variable_name);
+	free(modified_name);
 	return (-1);
 }
 char	*expand_and_replace_vars(char *str, char ***envp_ptr, int exit_code)
@@ -176,7 +177,8 @@ int	ft_echo(char **argv)
 	new_line = process_n_flags(argv, &i);
 	while (argv[i] != NULL)
 	{
-		str = process_arguments(argv[i]);;
+		str = process_arguments(argv[i]);
+		;
 		if (str)
 		{
 			write(STDOUT_FILENO, str, ft_strlen(str));

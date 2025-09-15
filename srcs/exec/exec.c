@@ -77,7 +77,7 @@ int	exec_simple_command(t_command_node *cmd, char ***envp,t_ast_node *node)
 		if (!cmd_path)
 		{
 			command_not_found(cmd);
-			exit(127);
+			ft_exit_builtin(*envp, node, 127);
 		}
 		execve(cmd_path, cmd->argv, *envp);
 		execve_error(cmd);

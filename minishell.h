@@ -132,7 +132,7 @@ int						ft_strcmp(const char *s1, const char *s2);
 // void					update_env_var(char ***envp_ptr, const char *var_name,
 // 							const char *value);
 
-int						ft_exit_builtin(char **envp, t_ast_node *pipe);
+int						ft_exit_builtin(char **envp, t_ast_node *pipe, int code);
 
 void					free_token(t_token *token);
 char					*ft_strcpy(char *dest, const char *src);
