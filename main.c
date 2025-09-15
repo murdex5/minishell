@@ -38,7 +38,7 @@ int	main(int argc, char **argv, char *envp[])
 	{
 		if (g_signal_received)
 			g_signal_received = 0;
-		line = readline("minishell: ");
+		line = readline("minishell$ ");
 		if (line == NULL)
 			return (restore_terminal_state(&original_term), ft_exit(line, token,
 					envp_copy, pipe), exit_code);
