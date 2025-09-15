@@ -54,18 +54,19 @@ void	expand_token_variables(t_token *tokens, int exit, char ***envp_ptr)
 			if (is_single_quoted(current->value))
 				mod_str = remove_quotes(current->value);
 			else
-				mod_str = expand_and_process_arguemetns(current->value,
-						envp_ptr, exit);
+				mod_str = expand_and_process_arguemetns(current->value, envp_ptr, exit);
+			
 			if (mod_str)
 			{
 				free(current->value);
-				current->value = ft_strdup(mod_str);
-				free(mod_str);
-				if (!current->value)
-					current->value = ft_strdup("");
+				current->value = mod_str;
+			}
+			else
+			{
+				free(current->value);
+				current->value = ft_strdup("");
 			}
 		}
 		current = current->next;
 	}
-
 }

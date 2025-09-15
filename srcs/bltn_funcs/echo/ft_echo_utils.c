@@ -14,25 +14,19 @@
 
 char	*get_variable_value(int index, char **envp_ptr)
 {
-	char	*value;
-	int		j;
-	int		i;
+	char	*env_var;
+	char	*equal_pos;
 
-	i = 0;
-	while (envp_ptr[index][i] != '=')
-		i++;
-	i++;
-	j = (int)ft_strlen(envp_ptr[i]) - i;
-	value = malloc(sizeof(char) * j + 1);
-	j = 0;
-	while (envp_ptr[index][i] != '\0')
-	{
-		value[j] = envp_ptr[index][i];
-		j++;
-		i++;
-	}
-	value[j] = '\0';
-	return (value);
+	if (!envp_ptr || index < 0 || !envp_ptr[index])
+		return (NULL);
+	
+	env_var = envp_ptr[index];
+	equal_pos = ft_strchr(env_var, '=');
+	
+	if (!equal_pos || *(equal_pos + 1) == '\0')
+		return (ft_strdup(""));
+	
+	return (ft_strdup(equal_pos + 1));
 }
 
 char	*modify_variable(char *str)
@@ -58,31 +52,25 @@ char	*modify_variable(char *str)
 	return (modified_str);
 }
 
-char	*detect_varaible_name(char *argv)
+char	*detect_varaible_name(char *str)
 {
-	int		i;
-	char	**strs;
-	char	*varaible_name;
+	int		start;
+	int		end;
+	char	*var_name;
 
-	strs = ft_split(argv, ' ');
-	varaible_name = NULL;
-	if (!strs)
+	if (str[0] != '$' || !str[1])
 		return (NULL);
-	i = 0;
-	while (strs[i] != NULL)
-	{
-		if (strs[i][0] == '$')
-		{
-			varaible_name = ft_strdup(strs[i]);
-			free_tokens(strs);
-			if (!varaible_name)
-				return (NULL);
-			return (varaible_name);
-		}
-		i++;
-	}
-	free_tokens(strs);
-	return (NULL);
+	start = 1; // Skip '$'
+	if (!ft_isalpha(str[start]) && str[start] != '_')
+		return (NULL);
+	end = start + 1;
+	while (str[end] && (ft_isalnum(str[end]) || str[end] == '_'))
+		end++;
+	var_name = malloc(end - start + 1);
+	if (!var_name)
+		return (NULL);
+	ft_strlcpy(var_name, str + start, end - start + 1);
+	return (var_name);
 }
 
 int	validate_quotes(const char *str)
