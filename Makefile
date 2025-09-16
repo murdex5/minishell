@@ -68,7 +68,8 @@ SRCS        := \
 	$(SRCS_DIR)/errors/errors.c \
 	$(SRCS_DIR)/errors/errors1.c \
 	$(SRCS_DIR)/closes.c \
-	$(SRCS_DIR)/frees.c \
+	$(SRCS_DIR)/free/frees1.c \
+	$(SRCS_DIR)/free/frees.c \
 	$(SRCS_DIR)/check_bltn.c \
 	$(SRCS_DIR)/bltn_funcs/echo/ft_echo_utils2.c \
 	$(SRCS_DIR)/bltn_funcs/echo/ft_echo_utils1.c \
