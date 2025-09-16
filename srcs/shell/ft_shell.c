@@ -37,14 +37,21 @@ void	process_line(char *line, t_shell_state *state)
 	{
 		add_history(line);
 		token = init_tokens(line);
+		if (!token)
+		{
+			free(line);
+			return ;
+		}
 		expand_token_variables(token, state->exit_code, &state->envp_copy);
 		state->pipe = parse(token);
-		free_token(token);
+		free_token(token); // Free the token list
 		if (state->pipe)
 		{
 			state->temp_exit = execute_ast_pipeline(state->pipe,
 					&state->envp_copy);
 			state->exit_code = state->temp_exit;
+			// Don't free state->pipe here - execute_ast_pipeline does it
+			state->pipe = NULL;
 		}
 	}
 	free(line);
@@ -61,8 +68,8 @@ void	shell_loop(t_shell_state *state)
 		line = readline("minishell$ ");
 		if (line == NULL)
 		{
-			restore_terminal_state(&state->original_term);
-			ft_exit(line, NULL, state->envp_copy, state->pipe);
+			cleanup_shell(state);
+			ft_exit(line, NULL, NULL, NULL);
 			exit(state->exit_code);
 		}
 		process_line(line, state);
@@ -72,5 +79,10 @@ void	shell_loop(t_shell_state *state)
 void	cleanup_shell(t_shell_state *state)
 {
 	restore_terminal_state(&state->original_term);
-	free_environment(state->envp_copy);
+	if (state->envp_copy)
+		free_environment(state->envp_copy);
+	state->envp_copy = NULL;
+	if (state->pipe)
+		free_ast(state->pipe);
+	state->pipe = NULL;
 }

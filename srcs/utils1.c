@@ -30,8 +30,11 @@ char	**copy_environment(char *envp[])
 		new_envp[i] = ft_strdup(envp[i]);
 		if (!new_envp[i])
 		{
-			while (i-- > 0)
+			while (i > 0)
+			{
+				i--;
 				free(new_envp[i]);
+			}
 			free(new_envp);
 			return (NULL);
 		}
@@ -77,7 +80,7 @@ char	*ft_strstr(const char *haystack, const char *needle)
 	{
 		j = 0;
 		while (haystack[i + j] != '\0' && needle[j] != '\0' && haystack[i
-				+ j] == needle[j])
+			+ j] == needle[j])
 		{
 			j++;
 		}

@@ -61,9 +61,11 @@ int	put_content(t_list *tmp, char **array, int *i)
 		array[*i] = ft_strdup((char *)tmp->content);
 		if (!array[*i])
 		{
-			while ((*i)-- > 0)
+			while (*i > 0)
+			{
+				(*i)--;
 				free(array[*i]);
-			free(array);
+			}
 			return (0);
 		}
 		(*i)++;

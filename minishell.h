@@ -177,7 +177,7 @@ void							shell_loop(t_shell_state *state);
 void							cleanup_shell(t_shell_state *state);
 void							free_pipe(t_pipe_node *pipe);
 void							handle_redirections(t_redirect *redir_list);
-void							handle_cmd_path(char *cmd_path,
+void							handle_cmd_path(char **cmd_path,
 									t_command_node *cmd, char ***envp,
 									t_ast_node *node);
 int								ft_exit_builtin(char **envp, t_ast_node *pipe,

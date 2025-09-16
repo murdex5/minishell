@@ -77,8 +77,7 @@ int	exec_simple_command(t_command_node *cmd, char ***envp, t_ast_node *node)
 		return (perror_ret("fork", 1));
 	if (pid == 0)
 	{
-		handle_redirections(cmd->redirections);
-		handle_cmd_path(cmd_path, cmd, envp, node);
+		handle_cmd_path(&cmd_path, cmd, envp, node);
 		free(cmd_path);
 		exit(126);
 	}
