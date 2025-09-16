@@ -25,61 +25,56 @@ int	add_env_variable(char ***envp_ptr, const char *new_var_str)
 	new_envp = malloc(sizeof(char *) * (count + 2));
 	if (!new_envp)
 		return (perror("minishell: malloc failed"), 1);
-	count = 0;
-	while ((*envp_ptr)[count] != NULL)
-	{
+	count = -1;
+	while ((*envp_ptr)[++count] != NULL)
 		new_envp[count] = (*envp_ptr)[count];
-		count++;
-	}
 	new_envp[count] = ft_strdup(new_var_str);
 	if (!new_envp[count])
-		return (perror("minishell: ft_strdup failed"), free(new_envp), 1);
+	{
+		free(new_envp);
+		return (perror("minishell: ft_strdup failed"), 1);
+	}
 	new_envp[count + 1] = NULL;
 	free(*envp_ptr);
 	*envp_ptr = new_envp;
 	return (0);
 }
 
+void	set_value(char ***envp_ptr, char *new_var_str, int i)
+{
+	(*envp_ptr)[i] = new_var_str;
+}
+
 void	update_env_var(char ***envp_ptr, const char *var_name,
 		const char *value)
 {
-	int		i;
-	char	*new_var_str;
 	size_t	name_len;
 	size_t	value_len;
+	char	*new_var_str;
+	int		i;
 
-	i = 0;
 	name_len = ft_strlen(var_name);
+	value_len = ft_strlen(value);
+	new_var_str = malloc(name_len + value_len + 2);
+	if (!new_var_str)
+		return (perror("minishell: malloc failed"));
+	ft_memcpy(new_var_str, var_name, name_len);
+	new_var_str[name_len] = '=';
+	ft_memcpy(new_var_str + name_len + 1, value, value_len + 1);
+	i = 0;
 	while ((*envp_ptr)[i])
 	{
 		if (ft_strncmp((*envp_ptr)[i], var_name, name_len) == 0
 			&& ((*envp_ptr)[i])[name_len] == '=')
-		{
-			free((*envp_ptr)[i]);
-			value_len = ft_strlen(value);
-			new_var_str = malloc(name_len + value_len + 2);
-			if (!new_var_str)
-				return ;
-			ft_memcpy(new_var_str, var_name, name_len);
-			new_var_str[name_len] = '=';
-			ft_memcpy(new_var_str + name_len + 1, value, value_len + 1);
-			(*envp_ptr)[i] = new_var_str;
-			return ;
-		}
+			return (free((*envp_ptr)[i]), set_value(envp_ptr, new_var_str, i));
 		i++;
 	}
-	value_len = ft_strlen(value);
-	new_var_str = malloc(name_len + value_len + 2);
-	if (!new_var_str)
-		return ;
-	ft_memcpy(new_var_str, var_name, name_len);
-	new_var_str[name_len] = '=';
-	ft_memcpy(new_var_str + name_len + 1, value, value_len + 1);
-	add_env_variable(envp_ptr, new_var_str);
+	if (add_env_variable(envp_ptr, new_var_str) != 0)
+		perror("minishell: failed to add env variable");
 	free(new_var_str);
 }
 
-int	ft_cd(char **argv, char **envp)
+int	ft_cd(char **argv, char ***envp_ptr)
 {
 	char	old_pwd[PATH_MAX];
 	char	new_pwd[PATH_MAX];
@@ -89,7 +84,7 @@ int	ft_cd(char **argv, char **envp)
 	if (argv[1] == NULL)
 		return (ft_putstr_fd("cd : missing arguments\n", STDERR_FILENO), 1);
 	if (argv[2] != NULL)
-		return (ft_putstr_fd("cd : too many argumetns\n", STDERR_FILENO), 1);
+		return (ft_putstr_fd("cd : too many arguments\n", STDERR_FILENO), 1);
 	if (chdir(argv[1]) != 0)
 	{
 		ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
@@ -101,7 +96,7 @@ int	ft_cd(char **argv, char **envp)
 	}
 	if (getcwd(new_pwd, sizeof(new_pwd)) == NULL)
 		return (perror("pwd"), 1);
-	update_env_var(&envp, "OLDPWD", old_pwd);
-	update_env_var(&envp, "PWD", new_pwd);
+	update_env_var(envp_ptr, "OLDPWD", old_pwd);
+	update_env_var(envp_ptr, "PWD", new_pwd);
 	return (0);
 }

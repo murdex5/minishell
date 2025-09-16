@@ -3,12 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+         #
+#    By: kadferna <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/07/12 17:32:55 by kadferna          #+#    #+#              #
-#    Updated: 2025/09/08 13:31:44 by anjbaiju         ###   ########.fr        #
+#    Created: 2025/09/16 18:09:13 by kadferna          #+#    #+#              #
+#    Updated: 2025/09/16 18:09:16 by kadferna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+
 
 # =========================
 # Color and Formatting
@@ -67,6 +69,8 @@ SRCS        := \
 	$(SRCS_DIR)/closes.c \
 	$(SRCS_DIR)/frees.c \
 	$(SRCS_DIR)/check_bltn.c \
+	$(SRCS_DIR)/bltn_funcs/echo/ft_echo_utils2.c \
+	$(SRCS_DIR)/bltn_funcs/echo/ft_echo_utils1.c \
 	$(SRCS_DIR)/bltn_funcs/echo/ft_echo_utils.c \
 	$(SRCS_DIR)/bltn_funcs/echo/ft_echo.c \
 	$(SRCS_DIR)/bltn_funcs/cd/ft_cd.c \

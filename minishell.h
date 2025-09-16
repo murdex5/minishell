@@ -29,6 +29,7 @@
 # include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h>
+# include <limits.h>
 
 typedef enum e_redirect_type
 {
@@ -97,6 +98,14 @@ typedef struct s_token
 	struct s_token		*next;
 }						t_token;
 
+typedef struct s_expand_data
+{
+	char				*result;
+	char				***envp_ptr;
+	int					exit_code;
+	int					j;
+}						t_expand_data;
+
 /* ** BUILT IN FUNCS ** */
 /*  ft_expand_vars */
 void					expand_token_variables(t_token *tokens, int exit,
@@ -109,10 +118,23 @@ char					*modify_variable(char *str);
 char					*detect_varaible_name(char *argv);
 int						validate_quotes(const char *str);
 char					*process_arguments(const char *str);
+int						append_str(char *dest, int start_index,
+							const char *src);
+void					find_quote(const char *str, char *processed_str, int quote);
+int						append_to_result(char *result, int j,
+							char *str_to_append);
+int						handle_special_vars(char *str, int *i,
+							t_expand_data *data);
+int						handle_env_var_expansion(char *var_name,
+							t_expand_data *data);
+int						handle_regular_vars(char *str, int *i,
+							t_expand_data *data);
+int						process_dollar_sign(char *str, int *i,
+							t_expand_data *data);
 char					*expand_and_replace_vars(char *str, char ***envp_ptr,
 							int exit_code);
 /* ft_cd */
-int						ft_cd(char **argv, char **envp);
+int						ft_cd(char **argv, char ***envp);
 /* ft_pwd */
 int						ft_pwd(void);
 /* ft_export */
@@ -132,7 +154,8 @@ int						ft_strcmp(const char *s1, const char *s2);
 // void					update_env_var(char ***envp_ptr, const char *var_name,
 // 							const char *value);
 
-int						ft_exit_builtin(char **envp, t_ast_node *pipe, int code);
+int						ft_exit_builtin(char **envp, t_ast_node *pipe,
+							int code);
 
 void					free_token(t_token *token);
 char					*ft_strcpy(char *dest, const char *src);
