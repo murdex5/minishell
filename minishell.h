@@ -165,16 +165,16 @@ int								find_variable_index(char **envp,
 char							**allocate_new_envp(int size);
 int								ft_env(char **envp);
 
-void							save_terminal_state(struct termios *original_state);
-void							restore_terminal_state(struct termios *original_state);
+void							save_terminal_state(struct termios
+									*original_state);
+void							restore_terminal_state(struct termios
+									*original_state);
 int								ft_strcmp(const char *s1, const char *s2);
-// void					update_env_var(char ***envp_ptr, const char *var_name,
-// 							const char *value);
-
-void	initialize_shell(t_shell_state *state, char *envp[]);
-void	process_line(char *line, t_shell_state *state);
-void	shell_loop(t_shell_state *state);
-void	cleanup_shell(t_shell_state *state);
+void							initialize_shell(t_shell_state *state,
+									char *envp[]);
+void							process_line(char *line, t_shell_state *state);
+void							shell_loop(t_shell_state *state);
+void							cleanup_shell(t_shell_state *state);
 void							free_pipe(t_pipe_node *pipe);
 void							handle_redirections(t_redirect *redir_list);
 void							handle_cmd_path(char *cmd_path,
