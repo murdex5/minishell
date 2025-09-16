@@ -66,7 +66,6 @@ void	free_ast(t_ast_node *node)
 	t_command_node	*cmd;
 	t_redirect		*curr;
 	t_redirect		*next;
-	t_pipe_node		*pipe;
 
 	if (!node)
 		return ;
@@ -84,12 +83,6 @@ void	free_ast(t_ast_node *node)
 		}
 	}
 	else if (node->type == NODE_PIPE)
-	{
-		pipe = (t_pipe_node *)node;
-		free_ast(pipe->left);
-		free_ast(pipe->right);
-	}
+		free_pipe((t_pipe_node *)node);
 	free(node);
 }
-
-

@@ -75,3 +75,8 @@ void	free_paths(char **paths)
 	free(paths);
 }
 
+void	free_pipe(t_pipe_node *pipe)
+{
+	free_ast(pipe->left);
+	free_ast(pipe->right);
+}

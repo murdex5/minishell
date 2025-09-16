@@ -54,6 +54,7 @@ HEADER      := minishell.h
 SRCS_DIR    := ./srcs
 SRCS        := \
 	$(SRCS_DIR)/utils0.c \
+	$(SRCS_DIR)/utils1.c \
 	$(SRCS_DIR)/exec/exec_utils1.c \
 	$(SRCS_DIR)/exec/exec_utils.c \
 	$(SRCS_DIR)/exec/exec_builtins.c \
