@@ -17,6 +17,7 @@
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
+# include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
@@ -29,7 +30,6 @@
 # include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h>
-# include <limits.h>
 
 typedef enum e_redirect_type
 {
@@ -120,7 +120,8 @@ int						validate_quotes(const char *str);
 char					*process_arguments(const char *str);
 int						append_str(char *dest, int start_index,
 							const char *src);
-void					find_quote(const char *str, char *processed_str, int quote);
+void					find_quote(const char *str, char *processed_str,
+							int quote);
 int						append_to_result(char *result, int j,
 							char *str_to_append);
 int						handle_special_vars(char *str, int *i,
@@ -138,9 +139,12 @@ int						ft_cd(char **argv, char ***envp);
 /* ft_pwd */
 int						ft_pwd(void);
 /* ft_export */
-int						ft_export(char **argv, char ***envp_ptr);
 int						check_exists(char **argv, char **envp);
 char					*get_variable_name(char **argv);
+int						count_envp(char **envp);
+int						check_args(char *argv);
+void					print_envp(char **envp);
+int						ft_export(char **argv, char ***envp_ptr);
 /* FT_UNSET */
 int						count_env_variables(char **envp);
 int						ft_unset(char **argv, char ***envp);
