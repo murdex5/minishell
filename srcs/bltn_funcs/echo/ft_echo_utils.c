@@ -19,13 +19,10 @@ char	*get_variable_value(int index, char **envp_ptr)
 
 	if (!envp_ptr || index < 0 || !envp_ptr[index])
 		return (NULL);
-	
 	env_var = envp_ptr[index];
 	equal_pos = ft_strchr(env_var, '=');
-	
 	if (!equal_pos || *(equal_pos + 1) == '\0')
 		return (ft_strdup(""));
-	
 	return (ft_strdup(equal_pos + 1));
 }
 
@@ -60,7 +57,7 @@ char	*detect_varaible_name(char *str)
 
 	if (str[0] != '$' || !str[1])
 		return (NULL);
-	start = 1; // Skip '$'
+	start = 1;
 	if (!ft_isalpha(str[start]) && str[start] != '_')
 		return (NULL);
 	end = start + 1;
@@ -96,4 +93,19 @@ int	validate_quotes(const char *str)
 		return (0);
 	}
 	return (1);
+}
+
+int	append_str(char *dest, int start_index, const char *src)
+{
+	int	k;
+
+	k = 0;
+	if (!src)
+		return (0);
+	while (src[k])
+	{
+		dest[start_index + k] = src[k];
+		k++;
+	}
+	return (k);
 }

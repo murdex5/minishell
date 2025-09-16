@@ -19,7 +19,6 @@ int	is_builtin(t_command_node *node)
 	if (!node || !node->argv || !node->argv[0])
 		return (0);
 	cmd_name = node->argv[0];
-	
 	if (ft_strncmp(cmd_name, "echo", ft_strlen(cmd_name) + 1) == 0)
 		return (1);
 	if (ft_strncmp(cmd_name, "cd", ft_strlen(cmd_name) + 1) == 0)

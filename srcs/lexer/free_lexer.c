@@ -27,7 +27,7 @@ t_redirect	*create_redirect(t_redirect_type type, char *filename)
 
 void	add_redirect(t_redirect **list, t_redirect *new)
 {
-	t_redirect *curr;
+	t_redirect	*curr;
 
 	if (!*list)
 	{

@@ -1,42 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*   ft_echo_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/03 13:09:06 by kadferna          #+#    #+#             */
-/*   Updated: 2025/09/03 13:09:08 by kadferna         ###   ########.fr       */
+/*   Created: 2025/09/16 17:57:51 by kadferna          #+#    #+#             */
+/*   Updated: 2025/09/16 17:57:53 by kadferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../minishell.h"
 
-int	ft_isdigit_str(const char *str)
+void	find_quote(const char *str, char *processed_str, int quote)
 {
 	int	i;
+	int	j;
 
 	i = 0;
-	if (str[i] == '-' || str[i] == '+')
-		i++;
+	j = 0;
 	while (str[i])
 	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		i++;
+		if ((str[i] == '\'' || str[i] == '"'))
+		{
+			if (!quote)
+				quote = str[i];
+			else if (quote == str[i])
+				quote = 0;
+			else
+				processed_str[j++] = str[i];
+			i++;
+			continue ;
+		}
+		else
+			processed_str[j++] = str[i++];
 	}
-	return (1);
-}
-
-int	ft_exit_builtin(char **envp, t_ast_node *pipe, int code)
-{
-	int	exit_code;
-
-	exit_code = 0;
-	free_environment(envp);
-	free_ast(pipe);
-	if (code > 0)
-		exit_code = code;
-	exit(exit_code);
-	return (exit_code);
+	processed_str[j] = '\0';
 }

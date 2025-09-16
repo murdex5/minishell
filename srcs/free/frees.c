@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 void	free_r1(char *r1)
 {
@@ -66,7 +66,6 @@ void	free_ast(t_ast_node *node)
 	t_command_node	*cmd;
 	t_redirect		*curr;
 	t_redirect		*next;
-	t_pipe_node		*pipe;
 
 	if (!node)
 		return ;
@@ -84,73 +83,6 @@ void	free_ast(t_ast_node *node)
 		}
 	}
 	else if (node->type == NODE_PIPE)
-	{
-		pipe = (t_pipe_node *)node;
-		free_ast(pipe->left);
-		free_ast(pipe->right);
-	}
+		free_pipe((t_pipe_node *)node);
 	free(node);
-}
-
-void	free_on_exiting_list(t_token *tokens)
-{
-	t_token	*current;
-	t_token	*next;
-
-	if (!tokens)
-		return ;
-	current = tokens;
-	while (current != NULL)
-	{
-		next = current->next;
-		if (current->value != NULL)
-			free(current->value);
-		free(current);
-		current = next;
-	}
-}
-
-void	free_paths(char **paths)
-{
-	int	i;
-
-	if (!paths)
-		return ;
-	i = 0;
-	while (paths[i])
-	{
-		free(paths[i]);
-		i++;
-	}
-	free(paths);
-}
-
-void	free_environment(char **msh_envp)
-{
-	int	i;
-
-	if (!msh_envp)
-		return ;
-	i = 0;
-	while (msh_envp[i])
-	{
-		free(msh_envp[i]);
-		i++;
-	}
-	free(msh_envp);
-}
-
-void	free_tokens_array(char **tokens)
-{
-	int	i;
-
-	if (!tokens)
-		return ;
-	i = 0;
-	while (tokens[i])
-	{
-		free(tokens[i]);
-		i++;
-	}
-	free(tokens);
 }

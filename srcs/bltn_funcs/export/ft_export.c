@@ -12,8 +12,6 @@
 
 #include "../../../minishell.h"
 
-
-
 char	*get_variable_name(char **argv)
 {
 	char	*variable_name;
@@ -39,35 +37,6 @@ char	*get_variable_name(char **argv)
 	return (variable_name);
 }
 
-int	check_exists(char **argv, char **envp)
-{
-	int		i;
-	char	*variable_name;
-	size_t	len;
-
-	variable_name = get_variable_name(argv);
-	if (!variable_name || *variable_name == '\0')
-	{
-		if (variable_name)
-			free(variable_name);
-		return (-1);
-	}
-	len = ft_strlen(variable_name);
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		if (ft_strncmp(variable_name, envp[i], len) == 0 && (envp[i][len] == '='
-				|| envp[i][len] == '\0'))
-		{
-			free(variable_name);
-			return (i);
-		}
-		i++;
-	}
-	free(variable_name);
-	return (-1);
-}
-
 int	add_new_variable(char ***envp_ptr, const char *new_var_str)
 {
 	char	**new_envp;
@@ -79,10 +48,7 @@ int	add_new_variable(char ***envp_ptr, const char *new_var_str)
 		count++;
 	new_envp = malloc((count + 2) * sizeof(char *));
 	if (!new_envp)
-	{
-		perror("minishell: malloc");
-		return (0);
-	}
+		return (perror("minishell: malloc"), 0);
 	i = 0;
 	while (i < count)
 	{
@@ -91,36 +57,10 @@ int	add_new_variable(char ***envp_ptr, const char *new_var_str)
 	}
 	new_envp[count] = ft_strdup(new_var_str);
 	if (!new_envp[count])
-	{
-		perror("minishell: ft_strdup");
-		free(new_envp);
-		return (0);
-	}
+		return (perror("minishell: ft_strdup"), free(new_envp), 0);
 	new_envp[count + 1] = NULL;
 	free(*envp_ptr);
 	*envp_ptr = new_envp;
-	return (1);
-}
-
-int	count_envp(char **envp)
-{
-	int	i;
-
-	i = 0;
-	while (envp[i] != NULL)
-		i++;
-	return (i);
-}
-
-int	check_args(char *argv)
-{
-	if (argv[0] >= '0' && argv[0] <= '9')
-	{
-		ft_putstr_fd("export : ", STDERR_FILENO);
-		ft_putstr_fd(argv, STDERR_FILENO);
-		ft_putstr_fd(" is not a valid identifier\n", STDERR_FILENO);
-		return (0);
-	}
 	return (1);
 }
 
@@ -152,17 +92,6 @@ void	sort_envp(char **copy_envp)
 	}
 }
 
-void	print_envp(char **envp)
-{
-	int	i;
-	i = 0;
-	sort_envp(envp);
-	while (envp[i])
-	{
-		printf("declare -x %s\n", envp[i]);
-		i++;
-	}
-}
 int	update_envp(char ***envp_ptr, char **argv)
 {
 	int	exists_index;
@@ -175,14 +104,13 @@ int	update_envp(char ***envp_ptr, char **argv)
 		if (!(*envp_ptr)[exists_index])
 			return (1);
 	}
-	else 
+	else
 	{
 		if (!add_new_variable(envp_ptr, argv[1]))
 			return (1);
 	}
 	return (0);
 }
-
 
 int	ft_export(char **argv, char ***envp_ptr)
 {

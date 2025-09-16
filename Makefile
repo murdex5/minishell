@@ -3,12 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+         #
+#    By: kadferna <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/07/12 17:32:55 by kadferna          #+#    #+#              #
-#    Updated: 2025/09/08 13:31:44 by anjbaiju         ###   ########.fr        #
+#    Created: 2025/09/16 18:09:13 by kadferna          #+#    #+#              #
+#    Updated: 2025/09/16 18:09:16 by kadferna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+
 
 # =========================
 # Color and Formatting
@@ -52,6 +54,8 @@ HEADER      := minishell.h
 SRCS_DIR    := ./srcs
 SRCS        := \
 	$(SRCS_DIR)/utils0.c \
+	$(SRCS_DIR)/utils1.c \
+	$(SRCS_DIR)/exec/exec_utils1.c \
 	$(SRCS_DIR)/exec/exec_utils.c \
 	$(SRCS_DIR)/exec/exec_builtins.c \
 	$(SRCS_DIR)/exec/exec.c \
@@ -65,8 +69,11 @@ SRCS        := \
 	$(SRCS_DIR)/errors/errors.c \
 	$(SRCS_DIR)/errors/errors1.c \
 	$(SRCS_DIR)/closes.c \
-	$(SRCS_DIR)/frees.c \
+	$(SRCS_DIR)/free/frees1.c \
+	$(SRCS_DIR)/free/frees.c \
 	$(SRCS_DIR)/check_bltn.c \
+	$(SRCS_DIR)/bltn_funcs/echo/ft_echo_utils2.c \
+	$(SRCS_DIR)/bltn_funcs/echo/ft_echo_utils1.c \
 	$(SRCS_DIR)/bltn_funcs/echo/ft_echo_utils.c \
 	$(SRCS_DIR)/bltn_funcs/echo/ft_echo.c \
 	$(SRCS_DIR)/bltn_funcs/cd/ft_cd.c \
@@ -74,9 +81,11 @@ SRCS        := \
 	$(SRCS_DIR)/bltn_funcs/env/ft_env.c \
 	$(SRCS_DIR)/bltn_funcs/unset/ft_unset_utils.c \
 	$(SRCS_DIR)/bltn_funcs/unset/ft_unset.c \
+	$(SRCS_DIR)/bltn_funcs/export/ft_export_utils.c \
 	$(SRCS_DIR)/bltn_funcs/export/ft_export.c \
 	$(SRCS_DIR)/bltn_funcs/expand_vars/ft_expand_vars.c \
 	$(SRCS_DIR)/bltn_funcs/exit/ft_exit.c \
+	$(SRCS_DIR)/shell/ft_shell.c \
 	main.c
 
 OBJS        := $(SRCS:.c=.o)

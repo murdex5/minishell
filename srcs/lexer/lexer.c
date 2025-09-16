@@ -70,8 +70,8 @@ t_token	*get_tokens(char **tokens)
 
 t_token	*init_tokens(char *line)
 {
-	char **tokens;
-	t_token *token;
+	char	**tokens;
+	t_token	*token;
 
 	tokens = construct_tokens(line);
 	if (!tokens)
