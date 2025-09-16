@@ -35,19 +35,15 @@ t_pipe_node	*create_pipe_node(t_ast_node *left, t_ast_node *right)
 
 t_redirect_type	get_redir_type(t_tokentype token_type)
 {
-	switch (token_type)
-	{
-	case TOKEN_REDIR_IN:
+	if (token_type == TOKEN_REDIR_IN)
 		return (REDIR_IN);
-	case TOKEN_REDIR_OUT:
+	else if (token_type == TOKEN_REDIR_OUT)
 		return (REDIR_OUT);
-	case TOKEN_REDIR_APPEND:
+	else if (token_type == TOKEN_REDIR_APPEND)
 		return (REDIR_APPEND);
-	case TOKEN_HEREDOC:
+	else if (token_type == TOKEN_HEREDOC)
 		return (REDIR_HEREDOC);
-	default:
-		return (REDIR_NONE);
-	}
+	return (REDIR_NONE);
 }
 
 bool	is_redirection(t_token *token)
@@ -56,7 +52,7 @@ bool	is_redirection(t_token *token)
 		return (false);
 	return (token->type == TOKEN_REDIR_IN || token->type == TOKEN_REDIR_OUT
 		|| token->type == TOKEN_REDIR_APPEND || token->type == TOKEN_HEREDOC);
-};
+}
 
 int	put_content(t_list *tmp, char **array, int *i)
 {
