@@ -41,6 +41,12 @@ char	*expand_and_process_arguemetns(char *curr_str, char ***envp_ptr,
 	return (mod_str);
 }
 
+static void	replace_given_val(t_token *current)
+{
+	free(current->value);
+	current->value = ft_strdup("");
+}
+
 void	expand_token_variables(t_token *tokens, int exit, char ***envp_ptr)
 {
 	t_token	*current;
@@ -54,18 +60,15 @@ void	expand_token_variables(t_token *tokens, int exit, char ***envp_ptr)
 			if (is_single_quoted(current->value))
 				mod_str = remove_quotes(current->value);
 			else
-				mod_str = expand_and_process_arguemetns(current->value, envp_ptr, exit);
-			
+				mod_str = expand_and_process_arguemetns(current->value,
+						envp_ptr, exit);
 			if (mod_str)
 			{
 				free(current->value);
 				current->value = mod_str;
 			}
 			else
-			{
-				free(current->value);
-				current->value = ft_strdup("");
-			}
+				replace_given_val(current);
 		}
 		current = current->next;
 	}

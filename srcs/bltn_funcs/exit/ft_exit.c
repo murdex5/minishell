@@ -33,7 +33,7 @@ int	ft_exit_builtin(char **envp, t_ast_node *pipe, int code)
 	int	exit_code;
 
 	exit_code = 0;
-	free_environment(envp); 
+	free_environment(envp);
 	free_ast(pipe);
 	if (code > 0)
 		exit_code = code;
