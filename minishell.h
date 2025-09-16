@@ -106,6 +106,8 @@ typedef struct s_expand_data
 	int					j;
 }						t_expand_data;
 
+extern volatile sig_atomic_t	g_signal_received;
+
 /* ** BUILT IN FUNCS ** */
 /*  ft_expand_vars */
 void					expand_token_variables(t_token *tokens, int exit,

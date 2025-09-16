@@ -12,8 +12,6 @@
 
 #include "../../minishell.h"
 
-extern volatile sig_atomic_t	g_signal_received;
-
 void	signal_handler(int sig)
 {
 	if (sig == SIGINT)
@@ -36,7 +34,6 @@ int	process_signals(struct sigaction *sa)
 		perror("sigaction");
 		return (0);
 	}
-	// Ignore SIGQUIT in the shell
 	signal(SIGQUIT, SIG_IGN);
 	return (1);
 }
