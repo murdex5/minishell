@@ -139,6 +139,7 @@ int						ft_cd(char **argv, char ***envp);
 /* ft_pwd */
 int						ft_pwd(void);
 /* ft_export */
+void					sort_envp(char **copy_envp);
 int						check_exists(char **argv, char **envp);
 char					*get_variable_name(char **argv);
 int						count_envp(char **envp);
@@ -158,6 +159,9 @@ int						ft_strcmp(const char *s1, const char *s2);
 // void					update_env_var(char ***envp_ptr, const char *var_name,
 // 							const char *value);
 
+void					handle_redirections(t_redirect *redir_list);
+void					handle_cmd_path(char *cmd_path, t_command_node *cmd,
+							char ***envp, t_ast_node *node);
 int						ft_exit_builtin(char **envp, t_ast_node *pipe,
 							int code);
 

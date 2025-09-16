@@ -54,6 +54,7 @@ HEADER      := minishell.h
 SRCS_DIR    := ./srcs
 SRCS        := \
 	$(SRCS_DIR)/utils0.c \
+	$(SRCS_DIR)/exec/exec_utils1.c \
 	$(SRCS_DIR)/exec/exec_utils.c \
 	$(SRCS_DIR)/exec/exec_builtins.c \
 	$(SRCS_DIR)/exec/exec.c \
@@ -78,6 +79,7 @@ SRCS        := \
 	$(SRCS_DIR)/bltn_funcs/env/ft_env.c \
 	$(SRCS_DIR)/bltn_funcs/unset/ft_unset_utils.c \
 	$(SRCS_DIR)/bltn_funcs/unset/ft_unset.c \
+	$(SRCS_DIR)/bltn_funcs/export/ft_export_utils.c \
 	$(SRCS_DIR)/bltn_funcs/export/ft_export.c \
 	$(SRCS_DIR)/bltn_funcs/expand_vars/ft_expand_vars.c \
 	$(SRCS_DIR)/bltn_funcs/exit/ft_exit.c \
