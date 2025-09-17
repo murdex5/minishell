@@ -126,7 +126,7 @@ fclean: clean
 
 re: fclean all
 
-valgrind: $(NAME)
+valgrind: libft $(NAME)
 	@valgrind --leak-check=full --show-leak-kinds=all --suppressions=supp.supp ./$(NAME)
 
 .PHONY: all clean fclean re libft valgrind
