@@ -105,7 +105,7 @@ Here are a few examples of commands you can run in `minishell`:
     minishell> echo $GREETING
     ```
 
-## ✍️ Author
+## ✍️ Authors
 
 **murdex5** - [GitHub Profile](https://github.com/murdex5)
 
