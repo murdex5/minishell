@@ -17,11 +17,14 @@ volatile sig_atomic_t	g_signal_received = 0;
 int	main(int argc, char **argv, char *envp[])
 {
 	t_shell_state	state;
+	int				exit_code;
 
+	exit_code = 0;
 	(void)argc;
 	(void)argv;
 	initialize_shell(&state, envp);
 	shell_loop(&state);
 	cleanup_shell(&state);
-	return (state.exit_code);
+	exit_code = state.exit_code;
+	return (exit_code);
 }
