@@ -15,13 +15,14 @@
 void	ft_exit(char *r1, t_token *token, char **envp_ptr, t_ast_node *pipe)
 {
 	printf("exit\n");
-	if (*envp_ptr || envp_ptr)
+	if (envp_ptr != NULL)
 		free_environment(envp_ptr);
 	if (token)
 		free_token(token);
 	if (pipe)
 		free_ast(pipe);
-	free_r1(r1);
+	if (r1)
+		free(r1);
 }
 
 int	is_single_quoted(const char *str)

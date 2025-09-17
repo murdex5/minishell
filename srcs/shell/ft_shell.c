@@ -80,5 +80,4 @@ void	cleanup_shell(t_shell_state *state)
 		free_ast(state->pipe);
 	state->pipe = NULL;
 	clear_history();
-	free(state);
 }
