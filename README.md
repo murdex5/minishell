@@ -89,20 +89,20 @@ Here are a few examples of commands you can run in `minishell`:
 
 1.  **Execute a simple command:**
     ```sh
-    minishell> ls -la
+    minishell$ ls -la
     ```
 2.  **Use a built-in and redirect output:**
     ```sh
-    minishell> echo "Hello Minishell!" > greeting.txt
+    minishell$ echo "Hello Minishell!" > greeting.txt
     ```
 3.  **Chain commands with a pipe:**
     ```sh
-    minishell> cat /dev/random | head -c 100 | wc -c
+    minishell$ cat /dev/random | head -c 100 | wc -c
     ```
 4.  **Manage environment variables:**
     ```sh
-    minishell> export GREETING="Welcome"
-    minishell> echo $GREETING
+    minishell$ export GREETING="Welcome"
+    minishell$ echo $GREETING
     ```
 
 ## ✍️ Authors
