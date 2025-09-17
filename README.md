@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/15885873/139530168-01d716a6-c430-463c-9562-f94c1f301479.png" width="500" alt="Command Line Interface">
+  <img src="https://carlalexander.ca/uploads/2018/09/sai-kiran-anagani-555972-unsplash.jpg" width="500" alt="Command Line Interface">
   <br>
   <em>A custom implementation of a command-line shell, built for a 42 school project.</em>
 </p>
