@@ -107,5 +107,6 @@ Here are a few examples of commands you can run in `minishell`:
 
 ## ✍️ Author
 
-**murdex5** - [GitHub Profile](https://github.com/murdex5).
+**murdex5** - [GitHub Profile](https://github.com/murdex5)
+
 **anjofficial** - [GitHub Profile](https://github.com/anjofficial)
