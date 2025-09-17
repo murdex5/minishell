@@ -18,7 +18,7 @@
   - [Installation](#-installation)
 - [Usage](#-usage)
   - [Examples](#examples)
-- [Author](#-author)
+- [Authors](#-authors)
 
 ## 🤔 About The Project
 
