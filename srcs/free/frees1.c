@@ -31,7 +31,7 @@ void	free_tokens_array(char **tokens)
 {
 	int	i;
 
-	if (!tokens)
+	if ((!tokens) || !(*tokens))
 		return ;
 	i = 0;
 	while (tokens[i])
@@ -75,8 +75,20 @@ void	free_paths(char **paths)
 	free(paths);
 }
 
-void	free_pipe(t_pipe_node *pipe)
+void	free_pipe(t_ast_node *node)
 {
-	free_ast(pipe->left);
-	free_ast(pipe->right);
+	t_pipe_node	*pipe;
+
+	pipe = (t_pipe_node *)node;
+	if (pipe->left)
+	{
+		free_ast(pipe->left);
+		pipe->left = NULL;
+	}
+	if (pipe->right)
+	{
+		free_ast(pipe->right);
+		pipe->right = NULL;
+	}
+	free(pipe);
 }

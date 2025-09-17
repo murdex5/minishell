@@ -21,17 +21,17 @@ static void	print_message(t_redirect *curr)
 	ft_putstr_fd("\n", 2);
 }
 
-void	handle_cmd_path(char *cmd_path, t_command_node *cmd, char ***envp,
+void	handle_cmd_path(char **cmd_path, t_command_node *cmd, char ***envp,
 		t_ast_node *node)
 {
 	handle_redirections(cmd->redirections);
-	cmd_path = resolve_command_path(cmd->argv[0], *envp);
-	if (!cmd_path)
+	*cmd_path = resolve_command_path(cmd->argv[0], *envp);
+	if (!*cmd_path)
 	{
 		command_not_found(cmd);
 		ft_exit_builtin(*envp, node, 127);
 	}
-	execve(cmd_path, cmd->argv, *envp);
+	execve(*cmd_path, cmd->argv, *envp);
 	execve_error(cmd);
 }
 

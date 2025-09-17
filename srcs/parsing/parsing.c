@@ -80,6 +80,8 @@ t_ast_node	*parse_pipe(t_token **token)
 			return (NULL);
 		}
 		pipe_node = create_pipe_node(left, right);
+		if (!pipe_node)
+			return (free_ast(left), free_ast(right), NULL);
 		left = (t_ast_node *)pipe_node;
 	}
 	return (left);
@@ -97,6 +99,7 @@ t_ast_node	*parse(t_token *token)
 	if (current && current->type != TOKEN_EOF)
 	{
 		ft_putstr_fd("Syntax error: unexpected token\n", 2);
+		free_token(token);
 		free_ast(ast);
 		return (NULL);
 	}

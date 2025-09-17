@@ -45,6 +45,7 @@ void	process_line(char *line, t_shell_state *state)
 			state->temp_exit = execute_ast_pipeline(state->pipe,
 					&state->envp_copy);
 			state->exit_code = state->temp_exit;
+			state->pipe = NULL;
 		}
 	}
 	free(line);
@@ -61,8 +62,8 @@ void	shell_loop(t_shell_state *state)
 		line = readline("minishell$ ");
 		if (line == NULL)
 		{
-			restore_terminal_state(&state->original_term);
-			ft_exit(line, NULL, state->envp_copy, state->pipe);
+			cleanup_shell(state);
+			ft_exit(line, NULL, NULL, NULL);
 			exit(state->exit_code);
 		}
 		process_line(line, state);
@@ -72,5 +73,12 @@ void	shell_loop(t_shell_state *state)
 void	cleanup_shell(t_shell_state *state)
 {
 	restore_terminal_state(&state->original_term);
-	free_environment(state->envp_copy);
+	if (state->envp_copy)
+		free_environment(state->envp_copy);
+	state->envp_copy = NULL;
+	if (state->pipe)
+		free_ast(state->pipe);
+	state->pipe = NULL;
+	clear_history();
+	free(state);
 }

@@ -162,9 +162,24 @@ int								count_env_variables(char **envp);
 int								ft_unset(char **argv, char ***envp);
 int								find_variable_index(char **envp,
 									char *var_to_remove);
+void							free_redirects(t_redirect *redir);
+void							free_til(char **tokens, int i);
 char							**allocate_new_envp(int size);
 int								ft_env(char **envp);
-
+t_token							*handle_new(t_token *head, int i,
+									char **tokens);
+int								exec_ast(t_ast_node *node, char ***envp,
+									t_ast_node *root_node);
+int								exec_simple_command(t_command_node *cmd,
+									char ***envp, t_ast_node *root_node);
+int								exec_pipe_node(t_pipe_node *pipe_node,
+									char ***envp, t_ast_node *root_node);
+void							handle_left_child(int *pipe_fd,
+									t_ast_node *node, char **envp,
+									t_ast_node *root_node);
+void							handle_right_child(int *pipe_fd,
+									t_ast_node *node, char **envp,
+									t_ast_node *root_node);
 void							save_terminal_state(struct termios
 									*original_state);
 void							restore_terminal_state(struct termios
@@ -175,9 +190,9 @@ void							initialize_shell(t_shell_state *state,
 void							process_line(char *line, t_shell_state *state);
 void							shell_loop(t_shell_state *state);
 void							cleanup_shell(t_shell_state *state);
-void							free_pipe(t_pipe_node *pipe);
+void							free_pipe(t_ast_node *node);
 void							handle_redirections(t_redirect *redir_list);
-void							handle_cmd_path(char *cmd_path,
+void							handle_cmd_path(char **cmd_path,
 									t_command_node *cmd, char ***envp,
 									t_ast_node *node);
 int								ft_exit_builtin(char **envp, t_ast_node *pipe,
@@ -196,20 +211,13 @@ void							printf_err(char *msg, t_node_type type);
 void							execve_error(t_command_node *cmd);
 void							command_not_found(t_command_node *cmd);
 void							perror_exit(char *msg, int i);
-void							handle_left_child(int *pipe_fd,
-									t_ast_node *node, char **envp);
-void							handle_right_child(int *pipe_fd,
-									t_ast_node *node, char **envp);
+
 void							close2_fd(int fd1, int fd2);
 int								perror_ret(char *msg, int i);
 void							free_paths(char **paths);
 int								close_exit(int fd1, int fd2, char **envp,
 									t_ast_node *node);
-int								exec_ast(t_ast_node *node, char ***envp);
-int								exec_pipe_node(t_pipe_node *pipe_node,
-									char ***envp);
-int								exec_simple_command(t_command_node *cmd,
-									char ***envp, t_ast_node *node);
+
 void							handle_redirections(t_redirect *redir_list);
 char							*resolve_command_path(const char *cmd_name,
 									char **envp);

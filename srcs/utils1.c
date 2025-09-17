@@ -29,12 +29,7 @@ char	**copy_environment(char *envp[])
 	{
 		new_envp[i] = ft_strdup(envp[i]);
 		if (!new_envp[i])
-		{
-			while (i-- > 0)
-				free(new_envp[i]);
-			free(new_envp);
-			return (NULL);
-		}
+			return (free_til(new_envp, i), NULL);
 		i++;
 	}
 	new_envp[count] = NULL;

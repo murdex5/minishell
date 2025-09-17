@@ -69,6 +69,7 @@ SRCS        := \
 	$(SRCS_DIR)/errors/errors.c \
 	$(SRCS_DIR)/errors/errors1.c \
 	$(SRCS_DIR)/closes.c \
+	$(SRCS_DIR)/free/frees2.c \
 	$(SRCS_DIR)/free/frees1.c \
 	$(SRCS_DIR)/free/frees.c \
 	$(SRCS_DIR)/check_bltn.c \

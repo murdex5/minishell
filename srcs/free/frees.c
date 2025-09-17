@@ -61,28 +61,15 @@ void	free_tokens(char **tokens)
 	tokens = NULL;
 }
 
-void	free_ast(t_ast_node *node)
+void	free_redirects(t_redirect *redir)
 {
-	t_command_node	*cmd;
-	t_redirect		*curr;
-	t_redirect		*next;
+	t_redirect	*tmp;
 
-	if (!node)
-		return ;
-	if (node->type == NODE_COMMAND)
+	while (redir)
 	{
-		cmd = (t_command_node *)node;
-		free_tokens(cmd->argv);
-		curr = cmd->redirections;
-		while (curr)
-		{
-			next = curr->next;
-			free(curr->filename);
-			free(curr);
-			curr = next;
-		}
+		tmp = redir;
+		redir = redir->next;
+		free(tmp->filename);
+		free(tmp);
 	}
-	else if (node->type == NODE_PIPE)
-		free_pipe((t_pipe_node *)node);
-	free(node);
 }
