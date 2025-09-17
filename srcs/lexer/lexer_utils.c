@@ -93,3 +93,18 @@ void	specify_tokens(t_token *token)
 		current = current->next;
 	}
 }
+
+t_token	*handle_new(t_token *head, int i, char **tokens)
+{
+	t_token	*new;
+
+	new = malloc(sizeof(t_token));
+	if (!new)
+		return (free_token(head), NULL);
+	new->value = ft_strdup(tokens[i]);
+	if (!new->value)
+		return (free(new), free_token(head), NULL);
+	new->next = NULL;
+	new->type = TOKEN_WORD;
+	return (new);
+}

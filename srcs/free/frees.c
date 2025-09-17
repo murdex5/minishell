@@ -73,39 +73,3 @@ void	free_redirects(t_redirect *redir)
 		free(tmp);
 	}
 }
-
-void	free_ast(t_ast_node *node)
-{
-	int	i;
-
-	if (!node)
-		return ;
-	if (node->type == NODE_COMMAND)
-	{
-		t_command_node	*cmd;
-		
-		cmd = (t_command_node *)node;
-		if (cmd->argv)
-		{
-			i = 0;
-			while (cmd->argv[i])
-			{
-				free(cmd->argv[i]);
-				i++;
-			}
-			free(cmd->argv);
-		}
-		free_redirects(cmd->redirections);
-		free(cmd);
-	}
-	else if (node->type == NODE_PIPE)
-	{
-		t_pipe_node	*pipe;
-		
-		pipe = (t_pipe_node *)node;
-		free_ast(pipe->left);
-		free_ast(pipe->right);
-		free(pipe);
-	}
-}
-

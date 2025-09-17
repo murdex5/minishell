@@ -32,16 +32,7 @@ char	**construct_tokens(char *line)
 	{
 		tokens[i] = get_next_word(&line_ptr);
 		if (!tokens[i])
-		{
-			// Free all previously allocated tokens
-			while (i > 0)
-			{
-				i--;
-				free(tokens[i]);
-			}
-			free(tokens);
-			return (NULL);
-		}
+			return (free_til(tokens, i), NULL);
 		i++;
 	}
 	tokens[i] = NULL;
@@ -62,14 +53,9 @@ t_token	*get_tokens(char **tokens)
 	i = 0;
 	while (tokens[i] != NULL)
 	{
-		new = malloc(sizeof(t_token));
+		new = handle_new(head, i, tokens);
 		if (!new)
-			return (free_token(head), NULL);
-		new->value = ft_strdup(tokens[i]);
-		if (!new->value)
-			return (free(new), free_token(head), NULL);
-		new->next = NULL;
-		new->type = TOKEN_WORD; // Will be specified later
+			return (NULL);
 		if (!head)
 			head = new;
 		else
@@ -91,7 +77,6 @@ t_token	*init_tokens(char *line)
 	if (!tokens)
 		return (NULL);
 	token = get_tokens(tokens);
-	// Free the tokens array and its contents
 	if (tokens)
 	{
 		i = 0;
