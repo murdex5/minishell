@@ -30,6 +30,6 @@ int	execute_builtin(t_command_node *cmd, char ***envp, t_ast_node *pipe)
 	if (ft_strncmp(cmd_name, "env", ft_strlen(cmd_name)) == 0)
 		return (ft_env(*envp));
 	if (ft_strncmp(cmd_name, "exit", ft_strlen(cmd_name)) == 0)
-		return (ft_exit_builtin(*envp, pipe, 0));
+		return (ft_exit_builtin(*envp, pipe, cmd, 0));
 	return (0);
 }

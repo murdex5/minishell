@@ -61,15 +61,17 @@ void	free_tokens(char **tokens)
 	tokens = NULL;
 }
 
-void	free_redirects(t_redirect *redir)
+void free_redirects(t_redirect *redir)
 {
-	t_redirect	*tmp;
+    t_redirect *curr;
+    t_redirect *next;
 
-	while (redir)
-	{
-		tmp = redir;
-		redir = redir->next;
-		free(tmp->filename);
-		free(tmp);
-	}
+    curr = redir;
+    while (curr)
+    {
+        next = curr->next;
+        free(curr->filename);
+        free(curr);
+        curr = next;
+    }
 }

@@ -86,7 +86,7 @@ int	check_exists(char **argv, char **envp)
 	while (envp[i] != NULL)
 	{
 		if (ft_strncmp(variable_name, envp[i], len) == 0 && (envp[i][len] == '='
-				|| envp[i][len] == '\0'))
+			|| envp[i][len] == '\0'))
 		{
 			free(variable_name);
 			return (i);

@@ -17,19 +17,17 @@ t_redirect	*parse_redirections(t_token **token)
 	t_redirect		*redir;
 	t_redirect_type	type;
 
-	if (!token || !*token)
-		return (NULL);
 	type = get_redir_type((*token)->type);
-	if (type == REDIR_NONE)
-		return (NULL);
-	advance_token(token);
+	advance_token(token); // Consume redirection token (e.g., '<')
+	
 	if (!*token || (*token)->type != TOKEN_WORD)
 	{
-		ft_putstr_fd("Syntax error: missing filename\n", 2);
+		ft_putstr_fd("minishell: syntax error near unexpected token\n", 2);
 		return (NULL);
 	}
+	
 	redir = create_redirect(type, (*token)->value);
-	advance_token(token);
+	advance_token(token); // Consume filename token
 	return (redir);
 }
 
@@ -38,69 +36,98 @@ t_ast_node	*parse_cmds(t_token **token)
 	t_command_node	*cmd;
 	t_list			*words;
 	t_redirect		*redirs;
+	t_redirect		*new_redir;
 
 	words = NULL;
 	redirs = NULL;
 	cmd = malloc(sizeof(t_command_node));
-	if (!cmd)
-		return (NULL);
+	if (!cmd) return (NULL);
 	cmd->type = NODE_COMMAND;
-	while (*token && ((*token)->type == TOKEN_WORD || is_redirection(*token)))
+	cmd->argv = NULL;
+	cmd->redirections = NULL;
+
+	// A simple command is a sequence of tokens terminated by a pipe or the end.
+	while (*token && (*token)->type != TOKEN_PIPE)
 	{
-		if ((*token)->type == TOKEN_WORD)
+		if (is_redirection(*token))
+		{
+			new_redir = parse_redirections(token);
+			if (!new_redir)
+			{
+				ft_lstclear(&words, free);
+				free_redirects(redirs);
+				free(cmd);
+				return (NULL);
+			}
+			add_redirect(&redirs, new_redir);
+		}
+		else if ((*token)->type == TOKEN_WORD)
 		{
 			ft_lstadd_back(&words, ft_lstnew(ft_strdup((*token)->value)));
 			advance_token(token);
 		}
-		else
-			add_redirect(&redirs, parse_redirections(token));
+		else // If it's not a redir, not a word, and not a pipe, it's a syntax error.
+		{
+			ft_putstr_fd("minishell: syntax error: unexpected token\n", 2);
+			ft_lstclear(&words, free);
+			free_redirects(redirs);
+			free(cmd);
+			return (NULL);
+		}
 	}
-	cmd->argv = list_to_array(words);
+
+	if (words)
+	{
+		cmd->argv = list_to_array(words);
+		ft_lstclear(&words, free);
+	}
 	cmd->redirections = redirs;
-	ft_lstclear(&words, free);
 	return ((t_ast_node *)cmd);
 }
 
 t_ast_node	*parse_pipe(t_token **token)
 {
-	t_ast_node	*left;
+	t_ast_node	*node;
 	t_ast_node	*right;
-	t_pipe_node	*pipe_node;
 
-	left = parse_cmds(token);
-	if (!left)
+	node = parse_cmds(token);
+	if (!node)
 		return (NULL);
+
 	while (*token && (*token)->type == TOKEN_PIPE)
 	{
 		advance_token(token);
+		if (!*token) { // Dangling pipe
+			ft_putstr_fd("minishell: syntax error near unexpected token `|'\n", 2);
+			free_ast(node);
+			return (NULL);
+		}
 		right = parse_cmds(token);
 		if (!right)
 		{
-			free_ast(left);
+			free_ast(node);
 			return (NULL);
 		}
-		pipe_node = create_pipe_node(left, right);
-		if (!pipe_node)
-			return (free_ast(left), free_ast(right), NULL);
-		left = (t_ast_node *)pipe_node;
+		node = (t_ast_node *)create_pipe_node(node, right);
 	}
-	return (left);
+	return (node);
 }
 
 t_ast_node	*parse(t_token *token)
 {
-	t_token		*current;
+	t_token		*current = token;
 	t_ast_node	*ast;
 
-	current = token;
-	ast = parse_pipe(&current);
-	if (!ast)
+	if (!current)
 		return (NULL);
-	if (current && current->type != TOKEN_EOF)
+
+	ast = parse_pipe(&current);
+
+	if (current != NULL) // Leftover tokens mean a syntax error
 	{
-		ft_putstr_fd("Syntax error: unexpected token\n", 2);
-		free_token(token);
+		ft_putstr_fd("minishell: syntax error: unexpected token at end of command\n", 2);
 		free_ast(ast);
+		// Do not free tokens here; the caller of parse() is responsible for them
 		return (NULL);
 	}
 	return (ast);

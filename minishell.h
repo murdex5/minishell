@@ -191,12 +191,11 @@ void							process_line(char *line, t_shell_state *state);
 void							shell_loop(t_shell_state *state);
 void							cleanup_shell(t_shell_state *state);
 void							free_pipe(t_ast_node *node);
-void							handle_redirections(t_redirect *redir_list);
+void	handle_redirections(t_redirect *redir_list);
 void							handle_cmd_path(char **cmd_path,
 									t_command_node *cmd, char ***envp,
 									t_ast_node *node);
-int								ft_exit_builtin(char **envp, t_ast_node *pipe,
-									int code);
+int								ft_exit_builtin(char **envp, t_ast_node *pipe, t_command_node *cmd, int code);
 
 void							free_token(t_token *token);
 char							*ft_strcpy(char *dest, const char *src);
@@ -218,7 +217,6 @@ void							free_paths(char **paths);
 int								close_exit(int fd1, int fd2, char **envp,
 									t_ast_node *node);
 
-void							handle_redirections(t_redirect *redir_list);
 char							*resolve_command_path(const char *cmd_name,
 									char **envp);
 char							**get_path(char *env[]);
