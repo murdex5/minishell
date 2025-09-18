@@ -69,12 +69,15 @@ int	ft_exit_builtin(char **envp, t_ast_node *pipe, t_command_node *cmd,
 	int	exit_code;
 
 	exit_code = 0;
-	if (argv_list_len(cmd->argv) == 2)
-		exit_code = check_arg_value(cmd->argv[1]);
-	else if (argv_list_len(cmd->argv) > 2)
+	if (cmd)
 	{
-		ft_putstr_fd("minishell : too many argumens\n", STDERR_FILENO);
-		exit_code = 1;
+		if (argv_list_len(cmd->argv) == 2)
+			exit_code = check_arg_value(cmd->argv[1]);
+		else if (argv_list_len(cmd->argv) > 2)
+		{
+			ft_putstr_fd("minishell : too many argumens\n", STDERR_FILENO);
+			exit_code = 1;
+		}
 	}
 	free_environment(envp);
 	free_ast(pipe);
