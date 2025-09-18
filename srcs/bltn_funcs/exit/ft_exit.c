@@ -55,6 +55,14 @@ int	check_arg_value(char *str)
 	return (exit_code);
 }
 
+int	modulo_val(int exit_code)
+{
+	int	mod_val;
+
+	mod_val = exit_code % 256;
+	return (mod_val);
+}
+
 int	ft_exit_builtin(char **envp, t_ast_node *pipe, t_command_node *cmd,
 		int code)
 {
@@ -70,8 +78,11 @@ int	ft_exit_builtin(char **envp, t_ast_node *pipe, t_command_node *cmd,
 	}
 	free_environment(envp);
 	free_ast(pipe);
+	printf("exit\n");
 	if (code > 0)
 		exit_code = code;
+	if (exit_code > 255)
+		exit_code = modulo_val(exit_code);
 	exit(exit_code);
 	return (exit_code);
 }
