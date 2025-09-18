@@ -12,6 +12,33 @@
 
 #include "../../../minishell.h"
 
+char	*remove_quotes_and_expand(const char *str)
+{
+	char	*result;
+	int		i;
+	int		j;
+	char	quote_char;
+
+	result = (char *)malloc(ft_strlen(str) + 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	j = 0;
+	quote_char = 0;
+	while (str[i])
+	{
+		if ((str[i] == 39 || str[i] == 42) && quote_char == 0)
+			quote_char = str[i];
+		else if (str[i] == quote_char)
+			quote_char = 0;
+		else
+			result[j++] = str[i];
+		i++;
+	}
+	result[j] = '\0';
+	return (result);
+}
+
 char	*remove_quotes(const char *str)
 {
 	size_t	len;
@@ -58,7 +85,7 @@ void	expand_token_variables(t_token *tokens, int exit, char ***envp_ptr)
 		if (current->type == TOKEN_WORD && current->value)
 		{
 			if (is_single_quoted(current->value))
-				mod_str = remove_quotes(current->value);
+				mod_str = remove_quotes_and_expand(current->value);
 			else
 				mod_str = expand_and_process_arguemetns(current->value,
 						envp_ptr, exit);

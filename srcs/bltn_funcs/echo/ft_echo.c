@@ -100,20 +100,14 @@ static int	process_n_flags(char **argv, int *i)
 
 int	ft_echo(char **argv)
 {
-	int		i;
-	int		new_line;
-	char	*str;
+	int	i;
+	int	new_line;
 
 	i = 1;
 	new_line = process_n_flags(argv, &i);
 	while (argv[i] != NULL)
 	{
-		str = process_arguments(argv[i]);
-		if (str)
-		{
-			write(STDOUT_FILENO, str, ft_strlen(str));
-			free(str);
-		}
+		write(STDOUT_FILENO, argv[i], ft_strlen(argv[i]));
 		if (argv[i + 1])
 			write(STDOUT_FILENO, " ", 1);
 		i++;
