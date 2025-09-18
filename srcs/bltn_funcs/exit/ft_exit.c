@@ -12,6 +12,18 @@
 
 #include "../../../minishell.h"
 
+static int	argv_list_len(char **argv)
+{
+	int	i;
+
+	if (!argv)
+		return (0);
+	i = 0;
+	while (argv[i] != NULL)
+		i++;
+	return (i);
+}
+
 int	ft_isdigit_str(const char *str)
 {
 	int	i;
@@ -28,11 +40,34 @@ int	ft_isdigit_str(const char *str)
 	return (1);
 }
 
-int	ft_exit_builtin(char **envp, t_ast_node *pipe, int code)
+int	check_arg_value(char *str)
+{
+	size_t	i;
+	int		exit_code;
+
+	i = ft_strlen(str);
+	exit_code = ft_atoi(str);
+	if (i > 0 && exit_code == 0)
+	{
+		ft_putstr_fd("minishell : numeric argument required\n", STDERR_FILENO);
+		exit_code = 2;
+	}
+	return (exit_code);
+}
+
+int	ft_exit_builtin(char **envp, t_ast_node *pipe, t_command_node *cmd,
+		int code)
 {
 	int	exit_code;
 
 	exit_code = 0;
+	if (argv_list_len(cmd->argv) == 2)
+		exit_code = check_arg_value(cmd->argv[1]);
+	else if (argv_list_len(cmd->argv) > 2)
+	{
+		ft_putstr_fd("minishell : too many argumens\n", STDERR_FILENO);
+		exit_code = 1;
+	}
 	free_environment(envp);
 	free_ast(pipe);
 	if (code > 0)

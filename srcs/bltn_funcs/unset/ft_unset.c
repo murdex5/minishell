@@ -58,10 +58,7 @@ int	ft_unset(char **argv, char ***envp)
 	int	i;
 
 	if (!argv[1])
-	{
-		ft_putstr_fd("unset: missing variable name\n", STDERR_FILENO);
-		return (1);
-	}
+		return (0);
 	i = 1;
 	while (argv[i])
 	{

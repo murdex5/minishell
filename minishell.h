@@ -195,8 +195,7 @@ void							handle_redirections(t_redirect *redir_list);
 void							handle_cmd_path(char **cmd_path,
 									t_command_node *cmd, char ***envp,
 									t_ast_node *node);
-int								ft_exit_builtin(char **envp, t_ast_node *pipe,
-									int code);
+int								ft_exit_builtin(char **envp, t_ast_node *pipe, t_command_node *cmd, int code);
 
 void							free_token(t_token *token);
 char							*ft_strcpy(char *dest, const char *src);

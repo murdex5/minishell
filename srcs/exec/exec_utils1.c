@@ -29,7 +29,7 @@ void	handle_cmd_path(char **cmd_path, t_command_node *cmd, char ***envp,
 	if (!*cmd_path)
 	{
 		command_not_found(cmd);
-		ft_exit_builtin(*envp, node, 127);
+		ft_exit_builtin(*envp, node, cmd, 127);
 	}
 	execve(*cmd_path, cmd->argv, *envp);
 	execve_error(cmd);
