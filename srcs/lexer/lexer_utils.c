@@ -15,29 +15,56 @@
 int	is_separator(char c)
 {
 	return (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
-		|| c == '\r' || c == '|' || c == '<' || c == '>');
+		|| c == '\r' || c == '<' || c == '>' || c == '|');
 }
 
 int	count_words_shell(const char *s)
 {
 	int		count;
 	char	quote_state;
+	int		i;
 
 	count = 0;
 	quote_state = 0;
-	while (*s)
+	i = 0;
+	while (s[i])
 	{
-		while (*s && is_separator(*s))
-			s++;
-		if (*s)
-			count++;
-		while (*s && (!is_separator(*s) || quote_state))
+		// Skip spaces
+		while (s[i] && (s[i] == ' ' || s[i] == '\t' || s[i] == '\n'
+				|| s[i] == '\v' || s[i] == '\f' || s[i] == '\r'))
+			i++;
+		// Check for redirection operators (<<, >>, <, >)
+		if (s[i] == '<' || s[i] == '>')
 		{
-			if (!quote_state && (*s == '\'' || *s == '"'))
-				quote_state = *s;
-			else if (quote_state == *s)
-				quote_state = 0;
-			s++;
+			count++;                          // Count this operator as a token
+			if (s[i + 1] && s[i + 1] == s[i]) // Check for << or >>
+				i++;
+			i++;
+			continue ;
+		}
+		// Check for pipe
+		else if (s[i] == '|')
+		{
+			count++;
+			i++;
+			continue ;
+		}
+		// Normal word token
+		else if (s[i])
+		{
+			count++;
+			// Process the word, handling quotes
+			while (s[i] && ((s[i] != ' ' && s[i] != '\t' && s[i] != '\n'
+						&& s[i] != '\v' && s[i] != '\f' && s[i] != '\r'
+						&& s[i] != '<' && s[i] != '>' && s[i] != '|')
+					|| quote_state))
+			{
+				if (!quote_state && (s[i] == '\'' || s[i] == '"'))
+					quote_state = s[i];
+				else if (quote_state == s[i])
+					quote_state = 0;
+				i++;
+			}
 		}
 	}
 	return (count);
@@ -51,24 +78,60 @@ char	*get_next_word(const char **s)
 	char		*word;
 
 	quote_state = 0;
-	len = 0;
-	while (**s && is_separator(**s))
+	// Skip spaces
+	while (**s && (**s == ' ' || **s == '\t' || **s == '\n' || **s == '\v'
+			|| **s == '\f' || **s == '\r'))
 		(*s)++;
-	start = *s;
-	while ((*s)[len] && (!is_separator((*s)[len]) || quote_state))
+	// Handle redirection operators
+	if (**s == '<' || **s == '>')
 	{
-		if (!quote_state && ((*s)[len] == '\'' || (*s)[len] == '"'))
-			quote_state = (*s)[len];
-		else if (quote_state == (*s)[len])
-			quote_state = 0;
-		len++;
+		start = *s;
+		len = 1;
+		// Check for << or >>
+		if ((*s)[1] && (*s)[1] == **s)
+			len = 2;
+		word = malloc(sizeof(char) * (len + 1));
+		if (!word)
+			return (NULL);
+		ft_strlcpy(word, start, len + 1);
+		*s += len;
+		return (word);
 	}
-	word = malloc(sizeof(char) * (len + 1));
-	if (!word)
-		return (NULL);
-	ft_strlcpy(word, start, len + 1);
-	*s += len;
-	return (word);
+	// Handle pipe
+	else if (**s == '|')
+	{
+		word = malloc(sizeof(char) * 2);
+		if (!word)
+			return (NULL);
+		word[0] = '|';
+		word[1] = '\0';
+		(*s)++;
+		return (word);
+	}
+	// Normal word token
+	else
+	{
+		start = *s;
+		len = 0;
+		while ((*s)[len] && (((*s)[len] != ' ' && (*s)[len] != '\t'
+					&& (*s)[len] != '\n' && (*s)[len] != '\v'
+					&& (*s)[len] != '\f' && (*s)[len] != '\r'
+					&& (*s)[len] != '<' && (*s)[len] != '>' && (*s)[len] != '|')
+				|| quote_state))
+		{
+			if (!quote_state && ((*s)[len] == '\'' || (*s)[len] == '"'))
+				quote_state = (*s)[len];
+			else if (quote_state == (*s)[len])
+				quote_state = 0;
+			len++;
+		}
+		word = malloc(sizeof(char) * (len + 1));
+		if (!word)
+			return (NULL);
+		ft_strlcpy(word, start, len + 1);
+		*s += len;
+		return (word);
+	}
 }
 
 void	specify_tokens(t_token *token)
