@@ -22,14 +22,35 @@ int	count_envp(char **envp)
 	return (i);
 }
 
+int	is_valid_variable_char(char c)
+{
+	return (ft_isalnum(c) || c == '_');
+}
+
 int	check_args(char *argv)
 {
-	if (argv[0] >= '0' && argv[0] <= '9')
+	int	i;
+
+	if (!argv || !*argv)
+		return (ft_putstr_fd("export: `': not a valid identifier\n",
+				STDERR_FILENO), 0);
+	if (!(ft_isalpha(argv[0]) || argv[0] == '_'))
 	{
-		ft_putstr_fd("export : ", STDERR_FILENO);
+		ft_putstr_fd("export: `", STDERR_FILENO);
 		ft_putstr_fd(argv, STDERR_FILENO);
-		ft_putstr_fd(" is not a valid identifier\n", STDERR_FILENO);
+		ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 		return (0);
+	}
+	i = 1;
+	while (argv[i] && argv[i] != '=')
+	{
+		if (!is_valid_variable_char(argv[i]))
+		{
+			ft_putstr_fd("export: `", STDERR_FILENO);
+			return (ft_putstr_fd(argv, STDERR_FILENO),
+				ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO), 0);
+		}
+		i++;
 	}
 	return (1);
 }
@@ -65,7 +86,7 @@ int	check_exists(char **argv, char **envp)
 	while (envp[i] != NULL)
 	{
 		if (ft_strncmp(variable_name, envp[i], len) == 0 && (envp[i][len] == '='
-			|| envp[i][len] == '\0'))
+				|| envp[i][len] == '\0'))
 		{
 			free(variable_name);
 			return (i);
