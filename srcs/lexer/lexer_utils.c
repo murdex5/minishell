@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 11:15:22 by kadferna          #+#    #+#             */
 /*   Updated: 2025/09/19 16:45:52 by anjbaiju         ###   ########.fr       */

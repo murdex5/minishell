@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   utils0.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 17:32:34 by kadferna          #+#    #+#             */
 /*   Updated: 2025/09/10 14:41:48 by anjbaiju         ###   ########.fr       */
