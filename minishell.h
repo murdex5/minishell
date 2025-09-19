@@ -124,6 +124,7 @@ extern volatile sig_atomic_t	g_signal_received;
 /* ************************************************************************** */
 
 /* ---- ft_expand_vars ---- */
+
 void							expand_token_variables(t_token *tokens,
 									int exit, char ***envp_ptr);
 int								check_on_evnp(char *variable_name, char **envp);
