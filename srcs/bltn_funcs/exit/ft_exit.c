@@ -12,18 +12,6 @@
 
 #include "../../../minishell.h"
 
-static int	argv_list_len(char **argv)
-{
-	int	i;
-
-	if (!argv)
-		return (0);
-	i = 0;
-	while (argv[i] != NULL)
-		i++;
-	return (i);
-}
-
 int	ft_isdigit_str(const char *str)
 {
 	int	i;
@@ -55,14 +43,6 @@ int	check_arg_value(char *str)
 	return (exit_code);
 }
 
-int	modulo_val(int exit_code)
-{
-	int	mod_val;
-
-	mod_val = exit_code % 256;
-	return (mod_val);
-}
-
 int	ft_exit_builtin(char **envp, t_ast_node *pipe, t_command_node *cmd,
 		int code)
 {
@@ -86,6 +66,19 @@ int	ft_exit_builtin(char **envp, t_ast_node *pipe, t_command_node *cmd,
 		exit_code = code;
 	if (exit_code > 255)
 		exit_code = modulo_val(exit_code);
+	exit(exit_code);
+	return (exit_code);
+}
+
+int	ft_exit_nomsg(char **envp, t_ast_node *pipe, int code)
+{
+	int	exit_code;
+
+	exit_code = 0;
+	free_environment(envp);
+	free_ast(pipe);
+	if (code > 0)
+		exit_code = code;
 	exit(exit_code);
 	return (exit_code);
 }

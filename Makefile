@@ -3,14 +3,12 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+         #
+#    By: kadferna <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/16 18:09:13 by kadferna          #+#    #+#              #
-#    Updated: 2025/09/19 16:46:58 by anjbaiju         ###   ########.fr        #
+#    Updated: 2025/09/20 00:46:53 by kadferna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-
-
 
 # =========================
 # Color and Formatting
@@ -87,6 +85,7 @@ SRCS        := \
 	$(SRCS_DIR)/bltn_funcs/export/ft_export_utils.c \
 	$(SRCS_DIR)/bltn_funcs/export/ft_export.c \
 	$(SRCS_DIR)/bltn_funcs/expand_vars/ft_expand_vars.c \
+	$(SRCS_DIR)/bltn_funcs/exit/ft_exit_helper.c \
 	$(SRCS_DIR)/bltn_funcs/exit/ft_exit.c \
 	$(SRCS_DIR)/shell/ft_shell.c \
 	main.c

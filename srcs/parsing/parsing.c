@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 16:50:34 by kadferna          #+#    #+#             */
-/*   Updated: 2025/09/19 17:19:54 by anjbaiju         ###   ########.fr       */
+/*   Updated: 2025/09/20 00:10:03 by kadferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,58 +28,6 @@ t_redirect	*parse_redirections(t_token **token)
 	advance_token(token);
 	return (redir);
 }
-
-// t_ast_node	*parse_cmds(t_token **token)
-// {
-// 	t_command_node	*cmd;
-// 	t_list			*words;
-// 	t_redirect		*redirs;
-// 	t_redirect		*new_redir;
-
-// 	words = NULL;
-// 	redirs = NULL;
-// 	cmd = malloc(sizeof(t_command_node));
-// 	if (!cmd)
-// 		return (NULL);
-// 	cmd->type = NODE_COMMAND;
-// 	cmd->argv = NULL;
-// 	cmd->redirections = NULL;
-// 	while (*token && (*token)->type != TOKEN_PIPE)
-// 	{
-// 		if (is_redirection(*token))
-// 		{
-// 			new_redir = parse_redirections(token);
-// 			if (!new_redir)
-// 			{
-// 				ft_lstclear(&words, free);
-// 				free_redirects(redirs);
-// 				free(cmd);
-// 				return (NULL);
-// 			}
-// 			add_redirect(&redirs, new_redir);
-// 		}
-// 		else if ((*token)->type == TOKEN_WORD)
-// 		{
-// 			ft_lstadd_back(&words, ft_lstnew(ft_strdup((*token)->value)));
-// 			advance_token(token);
-// 		}
-// 		else
-// 		{
-// 			ft_putstr_fd("minishell: syntax error: unexpected token\n", 2);
-// 			ft_lstclear(&words, free);
-// 			free_redirects(redirs);
-// 			free(cmd);
-// 			return (NULL);
-// 		}
-// 	}
-// 	if (words)
-// 	{
-// 		cmd->argv = list_to_array(words);
-// 		ft_lstclear(&words, free);
-// 	}
-// 	cmd->redirections = redirs;
-// 	return ((t_ast_node *)cmd);
-// }
 
 t_ast_node	*parse_cmds(t_token **token)
 {

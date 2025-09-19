@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 17:32:47 by kadferna          #+#    #+#             */
 /*   Updated: 2025/09/19 17:51:35 by anjbaiju         ###   ########.fr       */
@@ -31,6 +31,7 @@
 # include <termios.h>
 # include <unistd.h>
 
+/* ** TYPES ** */
 typedef enum e_redirect_type
 {
 	REDIR_IN,
@@ -58,6 +59,7 @@ typedef enum e_node_type
 	NODE_SUBSHELL
 }								t_node_type;
 
+/* ** STRUCTS ** */
 typedef struct s_redirect
 {
 	t_redirect_type				type;
@@ -117,11 +119,13 @@ typedef struct s_shell_state
 
 extern volatile sig_atomic_t	g_signal_received;
 
-/* ** BUILT IN FUNCS ** */
-/*  ft_expand_vars */
+/* ************************************************************************** */
+/*                           BUILT-IN FUNCTIONS                               */
+/* ************************************************************************** */
+
+/* ---- ft_expand_vars ---- */
 void							expand_token_variables(t_token *tokens,
 									int exit, char ***envp_ptr);
-int								ft_echo(char **argv);
 int								check_on_evnp(char *variable_name, char **envp);
 char							*get_variable_value(int index, char **envp_ptr);
 char							*modify_variable(char *str);
@@ -144,11 +148,7 @@ int								process_dollar_sign(char *str, int *i,
 									t_expand_data *data);
 char							*expand_and_replace_vars(char *str,
 									char ***envp_ptr, int exit_code);
-/* ft_cd */
-int								ft_cd(char **argv, char ***envp);
-/* ft_pwd */
-int								ft_pwd(void);
-/* ft_export */
+/* ---- ft_export ---- */
 void							sort_envp(char **copy_envp);
 int								check_exists(char **argv, char **envp);
 char							*get_variable_name(char **argv);
@@ -156,118 +156,154 @@ int								count_envp(char **envp);
 int								check_args(char *argv);
 void							print_envp(char **envp);
 int								ft_export(char **argv, char ***envp_ptr);
-/* FT_UNSET */
+/* ---- ft_unset ---- */
 int								count_env_variables(char **envp);
-int								ft_unset(char **argv, char ***envp);
 int								find_variable_index(char **envp,
 									char *var_to_remove);
 void							free_redirects(t_redirect *redir);
 void							free_til(char **tokens, int i);
 char							**allocate_new_envp(int size);
+int								ft_unset(char **argv, char ***envp);
+/* ---- ft_echo ---- */
+int								ft_echo(char **argv);
+/* ---- ft_cd ---- */
+int								ft_cd(char **argv, char ***envp);
+/* ---- ft_pwd---- */
+int								ft_pwd(void);
+/* ---- ft_env ---- */
 int								ft_env(char **envp);
+
+/* ************************************************************************** */
+/*                            FT_EXIT FUNCTIONS                               */
+/* ************************************************************************** */
+int								modulo_val(int exit_code);
+int								argv_list_len(char **argv);
+int								ft_exit_builtin(char **envp, t_ast_node *pipe,
+									t_command_node *cmd, int code);
+int								ft_exit_nomsg(char **envp, t_ast_node *pipe,
+									int code);
+void							ft_exit(char *r1, t_token *token,
+									char **envp_ptr, t_ast_node *pipe);
+
+/* ************************************************************************** */
+/*                             LEXER FUNCTIONS                                */
+/* ************************************************************************** */
+
+int								count_words_shell(const char *s);
+char							*get_next_word(const char **s);
 t_token							*handle_new(t_token *head, int i,
 									char **tokens);
-int								exec_ast(t_ast_node *node, char ***envp,
-									t_ast_node *root_node);
-int								exec_simple_command(t_command_node *cmd,
-									char ***envp, t_ast_node *root_node);
-int								exec_pipe_node(t_pipe_node *pipe_node,
-									char ***envp, t_ast_node *root_node);
+void							specify_tokens(t_token *token);
+void							free_token(t_token *token);
+void							skip_whitespace(const char *s, int *i);
+int								count_redir_or_pipe(const char *s, int *i);
+int								count_word_token(const char *s, int *i,
+									char *quote);
+char							*extract_word_token(const char *s, int *i);
+
+/* ************************************************************************** */
+/*                            PARSING FUNCTIONS                               */
+/* ************************************************************************** */
+
+t_redirect						*parse_redirections(t_token **token);
+t_redirect_type					get_redir_type(t_tokentype token_type);
+void							advance_token(t_token **token);
+t_redirect						*create_redirect(t_redirect_type type,
+									char *filename);
+t_command_node					*init_command_node(void);
+void							handle_redirections(t_redirect *redir_list);
+bool							process_command_tokens(t_token **token,
+									t_list **words, t_redirect **redirs);
+bool							is_redirection(t_token *token);
+t_pipe_node						*create_pipe_node(t_ast_node *left,
+									t_ast_node *right);
+int								put_content(t_list *tmp, char **array, int *i);
+void							add_redirect(t_redirect **list,
+									t_redirect *new);
+t_ast_node						*parse(t_token *token);
+
+/* ************************************************************************** */
+/*                           EXECUTOR FUNCTIONS                               */
+/* ************************************************************************** */
+
 void							handle_left_child(int *pipe_fd,
 									t_ast_node *node, char **envp,
 									t_ast_node *root_node);
 void							handle_right_child(int *pipe_fd,
 									t_ast_node *node, char **envp,
 									t_ast_node *root_node);
-void							save_terminal_state(struct termios
-									*original_state);
-void							restore_terminal_state(struct termios
-									*original_state);
-int								ft_strcmp(const char *s1, const char *s2);
-void							initialize_shell(t_shell_state *state,
-									char *envp[]);
-void							process_line(char *line, t_shell_state *state);
-void							shell_loop(t_shell_state *state);
-void							cleanup_shell(t_shell_state *state);
-void							free_pipe(t_ast_node *node);
-void							handle_redirections(t_redirect *redir_list);
+int								exec_simple_command(t_command_node *cmd,
+									char ***envp, t_ast_node *root_node);
+int								exec_pipe_node(t_pipe_node *pipe_node,
+									char ***envp, t_ast_node *root_node);
 void							handle_cmd_path(char **cmd_path,
 									t_command_node *cmd, char ***envp,
 									t_ast_node *node);
-int								ft_exit_builtin(char **envp, t_ast_node *pipe,
-									t_command_node *cmd, int code);
+char							*resolve_command_path(const char *cmd_name,
+									char **envp);
+int								is_builtin(t_command_node *node);
+int								execute_builtin(t_command_node *cmd,
+									char ***envp, t_ast_node *pipe);
+void							process_line(char *line, t_shell_state *state);
+char							**get_path(char *env[]);
+void							execve_error(t_command_node *cmd);
+void							command_not_found(t_command_node *cmd);
+int								exec_ast(t_ast_node *node, char ***envp,
+									t_ast_node *root_node);
 
-void							free_token(t_token *token);
+/* ************************************************************************** */
+/*                               SHELL FUNCTIONS                              */
+/* ************************************************************************** */
+
+void							restore_terminal_state(struct termios
+									*original_state);
+void							save_terminal_state(struct termios
+									*original_state);
+void							initialize_shell(t_shell_state *state,
+									char *envp[]);
+void							shell_loop(t_shell_state *state);
+void							cleanup_shell(t_shell_state *state);
+
+/* ************************************************************************** */
+/*                              OTHER FUNCTIONS                               */
+/* ************************************************************************** */
+
+void							free_pipe(t_ast_node *node);
 char							*ft_strcpy(char *dest, const char *src);
 char							*ft_strstr(const char *haystack,
 									const char *needle);
-int								execute_builtin(t_command_node *cmd,
-									char ***envp, t_ast_node *pipe);
 char							**copy_environment(char *envp[]);
 void							free_environment(char **msh_envp);
-int								is_builtin(t_command_node *node);
 void							printf_err(char *msg, t_node_type type);
-void							execve_error(t_command_node *cmd);
-void							command_not_found(t_command_node *cmd);
 void							perror_exit(char *msg, int i);
-
+int								ft_strcmp(const char *s1, const char *s2);
 void							close2_fd(int fd1, int fd2);
 int								perror_ret(char *msg, int i);
 void							free_paths(char **paths);
 int								close_exit(int fd1, int fd2, char **envp,
 									t_ast_node *node);
-
-char							*resolve_command_path(const char *cmd_name,
-									char **envp);
-char							**get_path(char *env[]);
-t_ast_node						*parse(t_token *token);
 int								execute_ast_pipeline(t_ast_node *node,
 									char ***envp_ptr);
-int								put_content(t_list *tmp, char **array, int *i);
-t_redirect_type					get_redir_type(t_tokentype token_type);
 void							free_ast(t_ast_node *node);
 char							**list_to_array(t_list *lst);
-t_pipe_node						*create_pipe_node(t_ast_node *left,
-									t_ast_node *right);
-bool							is_redirection(t_token *token);
-void							advance_token(t_token **token);
-t_redirect						*create_redirect(t_redirect_type type,
-									char *filename);
-void							add_redirect(t_redirect **list,
-									t_redirect *new);
 void							std_err_msg(char *msg);
 t_token							*init_tokens(char *line);
 t_token							*get_tokens(char **tokens);
-void							specify_tokens(t_token *token);
 int								get_array_len(char **tokens);
 int								is_separator(char c);
-int								count_words_shell(const char *s);
-char							*get_next_word(const char **s);
 int								free_on_error(char **result, int word_count);
 void							free_tokens(char **tokens);
 char							**construct_tokens(char *line);
 void							free_on_exiting_list(t_token *tokens);
 void							free_r1(char *r1);
-void							ft_exit(char *r1, t_token *token,
-									char **envp_ptr, t_ast_node *pipe);
 void							*ft_realloc(void *a, size_t old_size,
 									size_t new_size);
 void							signal_handler(int sig);
 int								process_signals(struct sigaction *sa);
 int								is_single_quoted(const char *str);
-int								count_redir_or_pipe(const char *s, int *i);
-int								count_word_token(const char *s, int *i,
-									char *quote);
-void							skip_whitespace(const char *s, int *i);
 char							*extract_operator_token(const char **s);
 bool							handle_redirection(t_token **token,
 									t_list **words, t_redirect **redirs);
-t_command_node					*init_command_node(void);
-bool							process_command_tokens(t_token **token,
-									t_list **words, t_redirect **redirs);
-t_redirect						*parse_redirections(t_token **token);
-int								count_redir_or_pipe(const char *s, int *i);
 char							*handle_redir_pipe(const char *s, int *i);
-char							*extract_word_token(const char *s, int *i);
 
 #endif
