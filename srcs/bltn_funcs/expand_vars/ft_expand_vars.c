@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_expand_vars.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 10:15:57 by kadferna          #+#    #+#             */
-/*   Updated: 2025/09/15 10:15:59 by kadferna         ###   ########.fr       */
+/*   Updated: 2025/09/19 14:28:55 by anjbaiju         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*remove_quotes_and_expand(const char *str)
 	quote_char = 0;
 	while (str[i])
 	{
-		if ((str[i] == 39 || str[i] == 42) && quote_char == 0)
+		if ((str[i] == 39 || str[i] == 34) && quote_char == 0)
 			quote_char = str[i];
 		else if (str[i] == quote_char)
 			quote_char = 0;
