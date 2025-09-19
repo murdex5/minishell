@@ -6,7 +6,7 @@
 /*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 17:32:47 by kadferna          #+#    #+#             */
-/*   Updated: 2025/09/19 17:51:35 by anjbaiju         ###   ########.fr       */
+/*   Updated: 2025/09/20 01:02:57 by kadferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,6 @@ extern volatile sig_atomic_t	g_signal_received;
 /* ************************************************************************** */
 
 /* ---- ft_expand_vars ---- */
-
 void							expand_token_variables(t_token *tokens,
 									int exit, char ***envp_ptr);
 int								check_on_evnp(char *variable_name, char **envp);
