@@ -6,7 +6,7 @@
 /*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 17:32:47 by kadferna          #+#    #+#             */
-/*   Updated: 2025/09/09 15:39:54 by anjbaiju         ###   ########.fr       */
+/*   Updated: 2025/09/19 17:51:35 by anjbaiju         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,6 @@ extern volatile sig_atomic_t	g_signal_received;
 /*  ft_expand_vars */
 void							expand_token_variables(t_token *tokens,
 									int exit, char ***envp_ptr);
-/* ft_echo */
 int								ft_echo(char **argv);
 int								check_on_evnp(char *variable_name, char **envp);
 char							*get_variable_value(int index, char **envp_ptr);
@@ -191,11 +190,12 @@ void							process_line(char *line, t_shell_state *state);
 void							shell_loop(t_shell_state *state);
 void							cleanup_shell(t_shell_state *state);
 void							free_pipe(t_ast_node *node);
-void	handle_redirections(t_redirect *redir_list);
+void							handle_redirections(t_redirect *redir_list);
 void							handle_cmd_path(char **cmd_path,
 									t_command_node *cmd, char ***envp,
 									t_ast_node *node);
-int								ft_exit_builtin(char **envp, t_ast_node *pipe, t_command_node *cmd, int code);
+int								ft_exit_builtin(char **envp, t_ast_node *pipe,
+									t_command_node *cmd, int code);
 
 void							free_token(t_token *token);
 char							*ft_strcpy(char *dest, const char *src);
@@ -255,5 +255,19 @@ void							*ft_realloc(void *a, size_t old_size,
 void							signal_handler(int sig);
 int								process_signals(struct sigaction *sa);
 int								is_single_quoted(const char *str);
+int								count_redir_or_pipe(const char *s, int *i);
+int								count_word_token(const char *s, int *i,
+									char *quote);
+void							skip_whitespace(const char *s, int *i);
+char							*extract_operator_token(const char **s);
+bool							handle_redirection(t_token **token,
+									t_list **words, t_redirect **redirs);
+t_command_node					*init_command_node(void);
+bool							process_command_tokens(t_token **token,
+									t_list **words, t_redirect **redirs);
+t_redirect						*parse_redirections(t_token **token);
+int								count_redir_or_pipe(const char *s, int *i);
+char							*handle_redir_pipe(const char *s, int *i);
+char							*extract_word_token(const char *s, int *i);
 
 #endif

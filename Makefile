@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kadferna <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/16 18:09:13 by kadferna          #+#    #+#              #
-#    Updated: 2025/09/16 18:09:16 by kadferna         ###   ########.fr        #
+#    Updated: 2025/09/19 16:46:58 by anjbaiju         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,9 +61,11 @@ SRCS        := \
 	$(SRCS_DIR)/exec/exec.c \
 	$(SRCS_DIR)/lexer/free_lexer.c \
 	$(SRCS_DIR)/lexer/lexer_utils.c \
+	$(SRCS_DIR)/lexer/lexer_utils1.c \
 	$(SRCS_DIR)/lexer/lexer.c \
 	$(SRCS_DIR)/parsing/parse_helper.c \
 	$(SRCS_DIR)/parsing/parse_utils.c \
+	$(SRCS_DIR)/parsing/parse_utils1.c \
 	$(SRCS_DIR)/parsing/parsing.c \
 	$(SRCS_DIR)/signals/signals.c \
 	$(SRCS_DIR)/errors/errors.c \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   frees.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 10:31:48 by kadferna          #+#    #+#             */
-/*   Updated: 2025/07/14 10:31:50 by kadferna         ###   ########.fr       */
+/*   Updated: 2025/09/19 15:19:16 by anjbaiju         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,17 +61,17 @@ void	free_tokens(char **tokens)
 	tokens = NULL;
 }
 
-void free_redirects(t_redirect *redir)
+void	free_redirects(t_redirect *redir)
 {
-    t_redirect *curr;
-    t_redirect *next;
+	t_redirect	*curr;
+	t_redirect	*next;
 
-    curr = redir;
-    while (curr)
-    {
-        next = curr->next;
-        free(curr->filename);
-        free(curr);
-        curr = next;
-    }
+	curr = redir;
+	while (curr)
+	{
+		next = curr->next;
+		free(curr->filename);
+		free(curr);
+		curr = next;
+	}
 }
