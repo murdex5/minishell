@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 22:16:22 by kadferna          #+#    #+#             */
-/*   Updated: 2025/09/03 11:27:06 by kadferna         ###   ########.fr       */
+/*   Updated: 2025/09/24 14:54:59 by anjbaiju         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,29 +74,29 @@ void	update_env_var(char ***envp_ptr, const char *var_name,
 	free(new_var_str);
 }
 
+char	*get_env_value(char *var_name, char **envp)
+{
+	int		i;
+	size_t	len;
+
+	i = 0;
+	len = ft_strlen(var_name);
+	while (envp[i])
+	{
+		if (ft_strncmp(envp[i], var_name, len) == 0 && envp[i][len] == '=')
+			return (envp[i] + len + 1);
+		i++;
+	}
+	return (NULL);
+}
+
 int	ft_cd(char **argv, char ***envp_ptr)
 {
 	char	old_pwd[PATH_MAX];
-	char	new_pwd[PATH_MAX];
+	char	*target_dir;
 
 	if (getcwd(old_pwd, sizeof(old_pwd)) == NULL)
 		return (perror("cd : getcwd error"), 1);
-	if (argv[1] == NULL)
-		return (ft_putstr_fd("cd : missing arguments\n", STDERR_FILENO), 1);
-	if (argv[2] != NULL)
-		return (ft_putstr_fd("cd : too many arguments\n", STDERR_FILENO), 1);
-	if (chdir(argv[1]) != 0)
-	{
-		ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
-		ft_putstr_fd(argv[1], STDERR_FILENO);
-		ft_putstr_fd(": ", STDERR_FILENO);
-		ft_putstr_fd(strerror(errno), STDERR_FILENO);
-		ft_putstr_fd("\n", STDERR_FILENO);
-		return (1);
-	}
-	if (getcwd(new_pwd, sizeof(new_pwd)) == NULL)
-		return (perror("pwd"), 1);
-	update_env_var(envp_ptr, "OLDPWD", old_pwd);
-	update_env_var(envp_ptr, "PWD", new_pwd);
-	return (0);
+	target_dir = resolve_target_dir(argv, *envp_ptr);
+	return (change_directory(target_dir, *envp_ptr, old_pwd));
 }

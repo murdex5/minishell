@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kadferna <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/16 18:09:13 by kadferna          #+#    #+#              #
-#    Updated: 2025/09/20 00:46:53 by kadferna         ###   ########.fr        #
+#    Updated: 2025/09/24 14:56:12 by anjbaiju         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,6 +77,7 @@ SRCS        := \
 	$(SRCS_DIR)/bltn_funcs/echo/ft_echo_utils1.c \
 	$(SRCS_DIR)/bltn_funcs/echo/ft_echo_utils.c \
 	$(SRCS_DIR)/bltn_funcs/echo/ft_echo.c \
+	$(SRCS_DIR)/bltn_funcs/cd/ft_cd_utils.c \
 	$(SRCS_DIR)/bltn_funcs/cd/ft_cd.c \
 	$(SRCS_DIR)/bltn_funcs/pwd/ft_pwd.c \
 	$(SRCS_DIR)/bltn_funcs/env/ft_env.c \
