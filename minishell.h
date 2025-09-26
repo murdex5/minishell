@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kadferna <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: anjbaiju <anjbaiju@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/12 17:32:47 by kadferna          #+#    #+#             */
-/*   Updated: 2025/09/20 01:02:57 by kadferna         ###   ########.fr       */
+/*   Updated: 2025/09/24 14:55:48 by anjbaiju         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,5 +305,12 @@ char							*extract_operator_token(const char **s);
 bool							handle_redirection(t_token **token,
 									t_list **words, t_redirect **redirs);
 char							*handle_redir_pipe(const char *s, int *i);
+void							update_env_var(char ***envp_ptr,
+									const char *var_name, const char *value);
+char							*get_env_value(char *var_name, char **envp);
+char							*handle_home_dash(char *arg, char **envp);
+char							*resolve_target_dir(char **argv, char **envp);
+int								change_directory(char *target_dir,
+									char **envp, char *old_pwd);
 
 #endif
