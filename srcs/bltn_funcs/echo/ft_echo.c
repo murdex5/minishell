@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../../minishell.h"
+#include <linux/limits.h>
 
 char	*process_arguments(const char *str)
 {
@@ -57,7 +58,7 @@ char	*expand_and_replace_vars(char *str, char ***envp_ptr, int exit_code)
 	int				i;
 	t_expand_data	data;
 
-	result = ft_calloc(ft_strlen(str) * 4 + 20, sizeof(char));
+	result = ft_calloc(ft_strlen(str) * 2 + PATH_MAX, sizeof(char));
 	if (!result)
 		return (ft_strdup(str));
 	data.result = result;
